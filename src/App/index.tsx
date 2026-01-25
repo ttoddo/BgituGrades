@@ -19,20 +19,22 @@ function App() {
   }, [])
 
   const handleThemeChange = () => {
-        if(theme == "light"){
-        setTheme("dark")
+    if(theme == "light"){
+      setTheme("dark")
     } else {
-        setTheme("light")
+      setTheme("light")
     }
     return
   }
   return (
-      <AuthContext value={authState}>
-        <ThemeContext value={theme} data-theme={theme}>
-            <Header handleThemeChange={handleThemeChange} data-theme={theme}/>
-            <RouteManager />
-        </ThemeContext>
-      </AuthContext>
+        <div data-theme={theme}>
+            <AuthContext value={authState}>
+                <ThemeContext value={theme}>
+                <Header handleThemeChange={handleThemeChange}/>
+                <RouteManager />
+                </ThemeContext>
+            </AuthContext>
+        </div>
     )
 }
 

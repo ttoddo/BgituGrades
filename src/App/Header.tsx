@@ -5,14 +5,15 @@ import DarkThemeeSwitcher from '../shared/components/SVG/DarkThemeSwitcher'
 
 
 
+
 interface PropsInterface {
-    handleThemeChange: Function
+    handleThemeChange: () => void
 }
 
 
 function Header({handleThemeChange}: PropsInterface){
     return (
-        <div className="bg-bgMiddle dark:bg-bgMiddleD w-full h-25 flex justify-center">
+        <div className="bg-bgMiddle dark:bg-bgMiddleD w-full h-25 flex justify-center items-center">
             <div className="w-[90%] fixed flex justify-between items-center ">
                 <div className="h-full w-fit flex items-center gap-5">
                     <Logo />
