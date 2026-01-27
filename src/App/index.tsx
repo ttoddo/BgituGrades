@@ -7,16 +7,17 @@ import { AuthContext } from '../shared/utils/contexts'
 
 
 function App() {
-  const [theme, setTheme] = useState<string>("light")
+  const [theme, setTheme] = useState<string>("dark")
   const [authState, setAuthState] = useState(false)
 
   useEffect(() => {
+    document.body.setAttribute(`data-theme`, theme)
     let takeTheme = getTheme();
     if (takeTheme != null){
         setTheme(takeTheme)
     }
     setAuthState(false);
-  }, [])
+  }, [theme])
 
   const handleThemeChange = () => {
     if(theme == "light"){
@@ -27,14 +28,12 @@ function App() {
     return
   }
   return (
-        <div data-theme={theme}>
-            <AuthContext value={authState}>
-                <ThemeContext value={theme}>
-                    <Header handleThemeChange={handleThemeChange}/>
-                    <RouteManager />
-                </ThemeContext>
-            </AuthContext>
-        </div>
+        <AuthContext value={authState}>
+            <ThemeContext value={theme}>
+                <Header handleThemeChange={handleThemeChange}/>
+                <RouteManager />
+            </ThemeContext>
+        </AuthContext>
     )
 }
 
