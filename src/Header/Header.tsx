@@ -14,10 +14,10 @@ interface PropsInterface {
 function Header({handleThemeChange}: PropsInterface){
     return (
         <div className="bg-bgMiddle dark:bg-bgMiddleD w-full h-25 flex justify-center items-center">
-            <div className="w-[90%] fixed flex justify-between items-center ">
+            <div className="w-[90%] flex justify-between items-center ">
                 <div className="h-full w-fit flex items-center gap-5">
                     <Logo />
-                    <h1 className="text-7xl font-bold dark:text:--color-tlightD">BGITU.GRADES</h1>
+                    <h1 className="text-6xl font-bold text-tLight dark:text-tLightD">BGITU.GRADES</h1>
                 </div>
                 <div className="h-fit w-fit">
                     <DarkThemeeSwitcher onClick={handleThemeChange}/>                    

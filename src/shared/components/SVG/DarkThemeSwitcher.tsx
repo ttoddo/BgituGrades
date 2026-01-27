@@ -7,10 +7,10 @@ interface PropsInterface {
     className?: string;
     children?: ReactNode;
     disabled?: boolean;
-    onClick?: Function;
+    onClick?: () => void;
 }
 
-function DarkThemeeSwitcher({children = "Кнопочка", disabled = false, onClick = () => {console.log("Меня кликнули")}, className = "bg-emerald-900"}:PropsInterface){
+function DarkThemeeSwitcher({disabled = false, onClick = () => {console.log("Меня кликнули")}}:PropsInterface){
     const handleClick = () => {
         if (!disabled) {
             onClick();

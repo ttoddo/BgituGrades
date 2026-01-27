@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import {getTheme} from '../shared/utils/themes'
-import Header from './Header'
+import Header from '../Header/Header'
 import RouteManager from './Routes'
 import { ThemeContext } from '../shared/utils/contexts'
 import { AuthContext } from '../shared/utils/contexts'
@@ -30,8 +30,8 @@ function App() {
         <div data-theme={theme}>
             <AuthContext value={authState}>
                 <ThemeContext value={theme}>
-                <Header handleThemeChange={handleThemeChange}/>
-                <RouteManager />
+                    <Header handleThemeChange={handleThemeChange}/>
+                    <RouteManager />
                 </ThemeContext>
             </AuthContext>
         </div>
