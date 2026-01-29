@@ -1,4 +1,5 @@
 import LeftNavBar from "../shared/components/LeftNavBar"
+import TableGenerator from "../shared/components/TableGenerator"
 import TopNavBar from "../shared/components/TopNavBar"
 
 function VisitActivity() {
@@ -8,7 +9,7 @@ function VisitActivity() {
                 <TopNavBar />
                 <div className="flex gap-6.25">
                     <LeftNavBar visitsStatus={true} tasksStatus={false}/>
-                    {/* <TableGenerator /> */}
+                    <TableGenerator ActualColAmount={24} ActualRowAmount={10} selectData={["1", "2", "3"]}/>
                 </div>
             </div>
         </div>
