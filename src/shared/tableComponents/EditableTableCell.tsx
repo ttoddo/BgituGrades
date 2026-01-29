@@ -1,19 +1,27 @@
-import Button from "./Button";
+import Button from "../components/Button";
 
 
 interface PropsInterface{
     isEditMode?: boolean;
     className?: string;
-    cellType?: "student" | "work" | "date";
+    cellType: "student" | "work" | "date";
     workLink?: string | null;
-    cellDateType: "Лаб" | "Прак" | null;
+    cellDateType?: "Лаб" | "Прак" | null;
     cellData?: string;
+    backgroundColor?: string
 }
 
 
 
-export default function TableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null}: PropsInterface){
-    
+export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null}: PropsInterface){
+    const handleClick = () => {
+        if (workLink) {
+            console.log("Я существую")
+        }
+        else {
+            console.log("Я сушеный сморчок")
+        }
+    }
 
     switch (cellType) {
         case "student":
@@ -23,8 +31,8 @@ export default function TableCell({isEditMode = false, className = "valuev", cel
                 <td className={className}>
                     <Button />
                 </td> :
-                <td>
-                    <p>{inputData}</p>
+                <td className={className}>
+                    <p>Имя еблана</p>
                 </td>)
 
             break;
@@ -36,11 +44,9 @@ export default function TableCell({isEditMode = false, className = "valuev", cel
                     </td>) 
             } else {
                 return (
-                    
-                    <td {if(workLink){onClick()}} className={className}>
-                        {cellData}
-                    </td>
+                    <td className={className} onClick={handleClick}>
 
+                    </td>
                 )
 
             }

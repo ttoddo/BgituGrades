@@ -9,7 +9,7 @@
 
 @theme {
     --color-primary: #60a5fa;
-    --color-bgDark: oklch(80.9% 0.105 251.813);
+    --color-bgDark: #ffffff;
     --color-bgMiddle: oklch(88.2% 0.059 254.128);
     --color-bgModal: oklch(93.2% 0.032 255.585);
     --color-bgLight: oklch(97% 0.014 254.604);
