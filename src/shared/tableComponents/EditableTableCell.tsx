@@ -32,7 +32,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
                     <Button />
                 </td> :
                 <td className={className}>
-                    <p>Имя еблана</p>
+                    <p>Имя студента</p>
                 </td>)
 
             break;
@@ -52,7 +52,16 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             }
             break;
         case "date":
-
+            return  (
+                isEditMode ? 
+                <td className={className}>
+                    <Button />
+                </td> :
+                <td className={className}>
+                    <div>23.01</div>
+                    <div className="h-[2px] bg-bgDark dark:bg-bgDarkD"></div>
+                    <div >Лаб</div>
+                </td>)
             break;
     
         default:
