@@ -13,6 +13,9 @@ const hui:Data[] = [{id:1, name: "pidaras"}, {id:2, name:"gnida"}, {id:3, name:"
 
 
 function TopNavBar(){
+    
+
+
     return (
        <div className="h-[100px] mt-[55px] flex justify-between pl-[15px] items-end">
             <div className="flex gap-[25px] items-end">

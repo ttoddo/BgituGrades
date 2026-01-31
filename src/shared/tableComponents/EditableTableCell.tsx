@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Button from "../components/Button";
+import StudentModal from "../components/modals/StudentModal";
 
 
 interface PropsInterface{
@@ -8,12 +10,17 @@ interface PropsInterface{
     workLink?: string | null;
     cellDateType?: "Лаб" | "Прак" | null;
     cellData?: string;
-    backgroundColor?: string
+    id?: number;
+    backgroundColor?: string;
+    onClick?: Function;
 }
 
 
 
-export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null}: PropsInterface){
+export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null, onClick = () => {console.log("clicked")}, id=2}: PropsInterface){
+
+    isEditMode = true;
+    
     const handleClick = () => {
         if (workLink) {
             console.log("Я существую")
@@ -29,9 +36,9 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             return  (
                 isEditMode ? 
                 <td className={className}>
-                    <Button />
+                    <Button className={className} onClick={onClick} id={id}>{cellData}</Button>
                 </td> :
-                <td className={className}>
+                <td onClick={onClick} className={className}>
                     <p>Имя студента</p>
                 </td>)
 
@@ -40,7 +47,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             if(isEditMode) {
                 return (
                     <td className={className}>
-                        <Button />
+                        <Button onClick={onClick}/>
                     </td>) 
             } else {
                 return (
@@ -55,7 +62,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
             return  (
                 isEditMode ? 
                 <td className={className}>
-                    <Button />
+                    <Button onClick={onClick}/>
                 </td> :
                 <td className={className}>
                     <div>23.01</div>
