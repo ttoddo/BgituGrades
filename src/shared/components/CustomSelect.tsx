@@ -21,13 +21,12 @@ export default function CustomSelect({selectData = ["П", "Н", "У"]}: PropsInt
     }
     
     return (
-        <Select onChange={handleChange} value={selectedValue} className={`block w-full h-full appearance-none px-3 py-1.5 text-sm/6 
-        focus:not-data-focus:outline-none text-tLight dark:text-tLightD 
-        text-center ${pIdor ? "opacity-0" : "opacity-100"} 
-        not-last:border-b-2 dark:not-last:border-b-tLightD not-last:border-b-tLight`}>
+        <Select onChange={handleChange} value={selectedValue} className={`block w-full h-full appearance-none
+        focus:not-data-focus:outline-none text-tLight dark:text-tLightD bg-bgDark dark:bg-bgDarkD text-[15px]
+        text-center ${pIdor ? "opacity-0" : "opacity-100"} `}>
             {selectData.map((val) => (
-                <option className="h-[25px] dark:bg-bgMiddleD text-center text-[15px] " value={val}>
-                    <p className="text-center">{val}</p>
+                <option>
+                    {val}
                 </option>
             ))}
         </Select>

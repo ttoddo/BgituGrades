@@ -13,7 +13,7 @@ interface PropsInterface {
 
 function Header({handleThemeChange}: PropsInterface){
     return (
-        <div className="bg-bgDark dark:bg-bgDarkD w-full h-25 flex justify-center items-center">
+        <div className="bg-bgDark dark:bg-bgDarkD w-full h-[10vh] flex justify-center items-center">
             <div className="w-[90%] flex justify-between items-center ">
                 <div className="h-full w-fit flex items-center gap-5">
                     <Logo />

@@ -6,14 +6,14 @@ interface PropsInterface{
     className?: string;
     cellType: "student" | "work" | "date";
     workLink?: string | null;
-    cellDateType?: "Лаб" | "Прак" | null;
+    cellDateType?: "Лек" | "Прак" | null;
     cellData?: string;
-    backgroundColor?: string
+    onClick?: () => void;
 }
 
 
 
-export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null}: PropsInterface){
+export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null, onClick}: PropsInterface){
     const handleClick = () => {
         if (workLink) {
             console.log("Я существую")
@@ -24,46 +24,40 @@ export default function EditableTableCell({isEditMode = false, className = "valu
     }
 
     switch (cellType) {
-        case "student":
-                    
+        case "student":      
             return  (
                 isEditMode ? 
-                <td className={className}>
+                <td className={className} onClick={onClick}>
                     <Button />
                 </td> :
-                <td className={className}>
-                    <p>Имя студента</p>
+                <td className={className} onClick={onClick}>
+                    <p>{cellData}</p>
                 </td>)
-
-            break;
         case "work":
             if(isEditMode) {
                 return (
-                    <td className={className}>
+                    <td className={className} onClick={onClick}>
                         <Button />
                     </td>) 
             } else {
                 return (
-                    <td className={className} onClick={handleClick}>
+                    <td className={className} onClick={onClick}>
 
                     </td>
                 )
 
             }
-            break;
         case "date":
             return  (
                 isEditMode ? 
-                <td className={className}>
+                <td className={className} onClick={onClick}>
                     <Button />
                 </td> :
-                <td className={className}>
-                    <div>23.01</div>
+                <td className={className} onClick={onClick}>
+                    <div>{cellData}</div>
                     <div className="h-[2px] bg-bgDark dark:bg-bgDarkD"></div>
-                    <div >Лаб</div>
+                    <div >{cellDateType}</div>
                 </td>)
-            break;
-    
         default:
             break;
     }

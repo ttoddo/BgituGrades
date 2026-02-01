@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
+import { useSearchParams } from "react-router-dom";
 
 
 type Data = {
@@ -11,17 +12,38 @@ type Data = {
 interface PropsInterface{
     textChildren?: string;
     helpText?: string;
-    array: Data[];
+    array: Array<JSON>;
+    inputType: "group" | "discipline"
+    onChange?: () => void;
+    handleSearch: () => void;
 }
 
 
 
 
-export default function Input({textChildren="Группа", helpText="Название группы", array = [{id:1, name:"uyebishe"}]}: PropsInterface){
-    const [selectedValue, setSelectedValue] = useState<Data | null>(null)
+export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch}: PropsInterface){
+    const [selectedValue, setSelectedValue] = useState<Array<JSON>|null>(null)
     const [query, setQuery] = useState(``)
+    const [searchParams ,setSearchParams] = useSearchParams()
     const handleClick = () => {
        return filterValues
+    }
+    const handleChange = (e: Array<JSON>|null) => {
+        setSelectedValue(e)
+        if (inputType == "group") {
+            let params = {
+                groupid: e.id,
+                disciplineid: searchParams.get("disciplineid")
+            }
+            setSearchParams(params)
+        } else if (inputType == "discipline") {
+            let params = {
+                groupid: searchParams.get("groupid"),
+                disciplineid: e.id
+            }
+            setSearchParams(params)
+        }
+        handleSearch()
     }
     const filterValues = 
         query === ``
@@ -34,7 +56,7 @@ export default function Input({textChildren="Группа", helpText="Назва
          <div className="flex flex-col gap-[10px]">
             <p className="text-[28px] font-bold text-tLight dark:text-tLightD">{textChildren}</p>
             <div className="relative">
-                <Combobox value={selectedValue}  onChange={setSelectedValue} onClose={() => setQuery(``)}>
+                <Combobox value={selectedValue}  onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput
                         className="w-[250px] bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-[8px] p-[10px] "
                         aria-label="Assignee"
@@ -46,7 +68,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                         </ComboboxButton>
                     <ComboboxOptions  anchor="bottom" className="w-[250px] bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-[8px]">
                         {filterValues.map((val) => (
-                            <ComboboxOption key={val.id}   value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-[10px]">
+                            <ComboboxOption key={val.id} id={val.id}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-[10px]">
                                 {val.name}
                             </ComboboxOption>
                         ))}

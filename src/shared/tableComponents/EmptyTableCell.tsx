@@ -2,8 +2,7 @@ import CustomSelect from "../components/CustomSelect";
 
 interface EmptyPropsInterface{
     className?: string;
-    cellType: "work" | "date" | null;
-    backgroundColor?: string;
+    cellType: "work" | "date";
 }
 
 
@@ -18,8 +17,6 @@ export default function EmptyTableCell({cellType, className = ""}: EmptyPropsInt
                     <CustomSelect selectData={selectDataVisit} />
                 </td>
             )
-            
-            break;
         case "work":
             return (
                 <td className={className}>
