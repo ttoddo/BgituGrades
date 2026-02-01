@@ -25,6 +25,9 @@ export default function Input({textChildren="Группа", helpText="Назва
     const [selectedValue, setSelectedValue] = useState<Array<JSON>|null>(null)
     const [query, setQuery] = useState(``)
     const [searchParams ,setSearchParams] = useSearchParams()
+    useEffect(() => {
+        handleSearch()
+    }, [searchParams])
     const handleClick = () => {
        return filterValues
     }
@@ -43,7 +46,7 @@ export default function Input({textChildren="Группа", helpText="Назва
             }
             setSearchParams(params)
         }
-        handleSearch()
+        
     }
     const filterValues = 
         query === ``
