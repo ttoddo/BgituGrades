@@ -18,7 +18,14 @@ interface PropsInterface {
 }
 
 
+<<<<<<< HEAD
+function TopNavBar(){
+    
+
+
+=======
 function TopNavBar({groups, disciplines, handleSearch}: PropsInterface){
+>>>>>>> 5fef1af7dd9c68d3be57def2bed13dcc1c1f2722
     return (
        <div className="h-[100px] mt-[55px] flex justify-between pl-[15px] items-end">
             <div className="flex gap-[25px] items-end">
