@@ -25,7 +25,7 @@ export default function TableGenerator({ActualColAmount = 24, ActualRowAmount = 
         setStudentModal(false)
     }
     const renderTable = (tableIndex:number) => {
-        const numRows = 15, numCols = 50
+        const numRows = 14, numCols = 50
         const rows = [];
         const cells = [];
         if (table?.length > 0) {
