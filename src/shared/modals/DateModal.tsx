@@ -9,6 +9,7 @@ interface PropsInterface{
 }    
 
 
+
 export default function DateModal({isOpen, close, isEditMode}: PropsInterface) {
 
   return (
