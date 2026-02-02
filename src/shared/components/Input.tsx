@@ -20,7 +20,18 @@ export default function Input({textChildren="Группа", helpText="Назва
     const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | null>(null)
     const [query, setQuery] = useState(``)
     const [searchParams, setSearchParams] = useSearchParams()
+
     useEffect(() => {
+        let disciplineId = searchParams.get("disciplineid")
+        let groupId = searchParams.get("groupid")
+        let elementToSet: GroupInterface | DisciplineInterface | null = null;
+        array.forEach(element => {
+            if ((element.id == Number(groupId) && inputType == "group") || (element.id == Number(disciplineId) && inputType == "discipline")) {
+                elementToSet = element
+            }
+        });
+        setSelectedValue(elementToSet)
+
         handleSearch()
     }, [searchParams])
     const handleClick = () => {
