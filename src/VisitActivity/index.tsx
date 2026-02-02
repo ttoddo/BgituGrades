@@ -4,39 +4,38 @@ import TopNavBar from "../shared/components/TopNavBar"
 import { useEffect, useState } from "react"
 import { getGroups, getVisitsTable, getDisciplines } from "../shared/utils/apiRequests"
 import { useSearchParams } from "react-router-dom"
+import type { DisciplineInterface, GroupInterface, TableSample } from "../shared/types/fromRequests"
 
 function VisitActivity() {
     const [searchParams] = useSearchParams()
     const [isEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
-    const [groups, setGroups] = useState<Array<JSON>>([])
-    const [disciplines, setDisciplines] = useState<Array<JSON>>([])
-    const [tableIds, setTableIds] = useState<number[]>()
-    const [table, setTable] = useState<Array<JSON>>([])
+    const [groups, setGroups] = useState<GroupInterface[]>([])
+    const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
+    const [tableIds, setTableIds] = useState<number[]>([])
+    const [table, setTable] = useState<TableSample>()
     const [isTableReady, setIsTableReady] = useState(false)
 
     useEffect(() => {
         const getTable = async () => {
-            let res:JSON | undefined = await getVisitsTable(tableIds[0], tableIds[1])
-            console.log(res)
+            let res: TableSample | undefined = await getVisitsTable(tableIds[0], tableIds[1])
             if (res) {
-                setTable(res.data)
-                console.log(res.data)
+                setTable(res)
                 setIsTableReady(true)
             }
         }
         const getGroupsAndDisciplines = async () => {
-            let respGroups:JSON | undefined = await getGroups()
-            let respDisciplines:JSON | undefined = await getDisciplines()
+            let respGroups: GroupInterface[] | undefined = await getGroups()
+            let respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
             if (respGroups) {
-                setGroups(respGroups.data)
+                setGroups(respGroups)
             }
             if (respDisciplines) {
-                setDisciplines(respDisciplines.data)
+                setDisciplines(respDisciplines)
             }
             setIsLoading(false)
         }
-        if (tableIds) {
+        if (tableIds.length > 0) {
             getTable()
         }
         getGroupsAndDisciplines()
@@ -60,7 +59,7 @@ function VisitActivity() {
                 <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups}/>
                 <div className="flex gap-6.25">
                     <LeftNavBar visitsStatus={true} tasksStatus={false}/>
-                    <TableGenerator table={table} isEditMode={isEditMode} tableType="date" ActualColAmount={24} ActualRowAmount={10} selectData={["1", "2", "3"]}/>
+                    <TableGenerator table={table} isEditMode={isEditMode} tableType="date"/>
                 </div>
             </div>
         </div>
@@ -73,7 +72,7 @@ function VisitActivity() {
                 <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups}/>
                 <div className="flex gap-6.25">
                     <LeftNavBar visitsStatus={true} tasksStatus={false}/>
-                    <TableGenerator table={[]} isEditMode={isEditMode} tableType="date" ActualColAmount={24} ActualRowAmount={10} selectData={["1", "2", "3"]}/>
+                    <TableGenerator isEditMode={isEditMode} tableType="date"/>
                 </div>
             </div>
         </div> 

@@ -1,8 +1,7 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavSection from "./NavSection"
 import Tasks from "./SVG/Tasks"
 import Visits from "./SVG/Visits"
-import { useState } from "react";
 
 interface PropsInterface{
     visitsStatus:boolean;

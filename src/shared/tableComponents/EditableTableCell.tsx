@@ -13,16 +13,7 @@ interface PropsInterface{
 
 
 
-export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", workLink = null, cellData = "inCell", cellDateType = null, onClick}: PropsInterface){
-    const handleClick = () => {
-        if (workLink) {
-            console.log("Я существую")
-        }
-        else {
-            console.log("Я сушеный сморчок")
-        }
-    }
-
+export default function EditableTableCell({isEditMode = false, className = "valuev", cellType = "student", /*workLink = null,*/ cellData = "inCell", cellDateType = null, onClick}: PropsInterface){
     switch (cellType) {
         case "student":      
             return  (
@@ -55,7 +46,7 @@ export default function EditableTableCell({isEditMode = false, className = "valu
                 </td> :
                 <td className={className} onClick={onClick}>
                     <div>{cellData}</div>
-                    <div className="h-[2px] bg-bgDark dark:bg-bgDarkD"></div>
+                    <div className="h-0.5 bg-bgDark dark:bg-bgDarkD"></div>
                     <div >{cellDateType}</div>
                 </td>)
         default:

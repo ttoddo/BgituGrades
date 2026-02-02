@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { DisciplineInterface, GroupInterface, TableSample } from '../types/fromRequests';
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
 const instance = axios.create({
@@ -11,12 +12,14 @@ const instance = axios.create({
     }
 });
 
+interface Response<T> {
+    data: T;
+}
 
 export const getVisitsTable = async (groupId: number, disciplineId: number) => {
     try {
-        let data:JSON = await instance.get(`/api/class/presenceGrade?groupId=${groupId}&disciplineId=${disciplineId}`);
-        console.log(data)
-        return data
+        let data: Response<TableSample> = await instance.get(`/api/class/presenceGrade?groupId=${groupId}&disciplineId=${disciplineId}`);
+        return data.data
         } catch (error) {
         console.error(error);
     }
@@ -24,8 +27,8 @@ export const getVisitsTable = async (groupId: number, disciplineId: number) => {
 
 export const getGroups = async () => {
     try {
-        let result: JSON = await instance.get("/api/group/all")
-        return result
+        let result: Response<GroupInterface[]> = await instance.get("/api/group/all")
+        return result.data
     } catch (error) {
         console.log(error)
     }
@@ -33,8 +36,8 @@ export const getGroups = async () => {
 
 export const getDisciplines = async () => {
     try {
-        let result: JSON = await instance.get("/api/discipline")
-        return result
+        let result: Response<DisciplineInterface[]> = await instance.get("/api/discipline")
+        return result.data
     } catch (error) {
         console.log(error)
     }

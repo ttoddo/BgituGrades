@@ -15,7 +15,7 @@ export default function ModalInput({placeholder, children}: PropsInterface) {
     return (
         <Field className="flex flex-col gap-1 text-tLight dark:text-tLightD">
             <Label>{children}</Label>
-            <Input placeholder={placeholder} className="bg-bgLight dark:bg-bgLightD rounded-[4px] h-[40px] data-focus:outline-bgLightD data-focus:outline-2"/>
+            <Input placeholder={placeholder} className="bg-bgLight dark:bg-bgLightD rounded-sm h-10 data-focus:outline-bgLightD data-focus:outline-2"/>
         </Field>
     )
 }

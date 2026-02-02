@@ -1,32 +1,24 @@
 import Button from "./Button"
 import Input from "./Input"
 import Image from "../../assets/alt.png"
-import { useSearchParams } from "react-router-dom";
-
-type Data = {
-    id: number;
-    name: string;
-}
-
-
-const hui:Data[] = [{id:1, name: "pidaras"}, {id:2, name:"gnida"}, {id:3, name:"huesos"}]
+import type { DisciplineInterface, GroupInterface } from "../types/fromRequests";
 
 interface PropsInterface {
-    groups: JSON[];
-    disciplines: JSON[];
+    groups: GroupInterface[];
+    disciplines: DisciplineInterface[];
     handleSearch: () => void;
 }
 
 
 function TopNavBar({groups, disciplines, handleSearch}: PropsInterface){
     return (
-       <div className="h-[100px] mt-[55px] flex justify-between pl-[15px] items-end">
-            <div className="flex gap-[25px] items-end">
-                <img className="mr-[13px]" src={Image} alt="img" />
+       <div className="h-25 mt-13.75 flex justify-between pl-3.75 items-end">
+            <div className="flex gap-6.25 items-end">
+                <img className="mr-3.25" src={Image} alt="img" />
                 <Input handleSearch={handleSearch} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
                 <Input handleSearch={handleSearch} inputType="group" array={groups} textChildren="Группа" helpText="Название группы..."/>
             </div> 
-            <div className="flex  gap-[25px]">
+            <div className="flex gap-6.25">
                 <Button children="Редактировать"/>
                 <Button children="Скачать в Excel"/>
                 <Button children="Поделиться"/>

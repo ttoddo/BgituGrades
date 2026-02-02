@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { useState } from 'react'
-import ModalInput from './modalInput';
+import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
 
 interface PropsInterface{
@@ -26,9 +25,9 @@ export default function DateModal({isOpen, close, isEditMode}: PropsInterface) {
             </DialogTitle>
             <ModalInput>Дата</ModalInput>
             <ModalInput>Тип занятия</ModalInput>
-            <div className="mt-4 flex gap-[30px]">
+            <div className="mt-4 flex gap-7.5">
                 <Button
-                    className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tDark text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
+                    className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tDark shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"
                     onClick={close}
                 >
                     Сохранить
@@ -39,7 +38,7 @@ export default function DateModal({isOpen, close, isEditMode}: PropsInterface) {
                 >
                     Закрыть
                 </Button>
-                <Cross onClick={close} className='fill-tLight dark:fill-tLightD absolute top-[10px] right-[10px]'/>
+                <Cross onClick={close} className='fill-tLight dark:fill-tLightD absolute top-2.5 right-2.5'/>
 
             </div>
         </DialogPanel>
