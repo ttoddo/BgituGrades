@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EmptyTableCell from "./EmptyTableCell";
 import FirstTableCell from "./FirstTableCell";
 import EditableTableCell from "./EditableTableCell";
@@ -21,6 +21,9 @@ export default function TableGenerator({tableType, isEditMode, table}: PropsInte
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [searchParams] = useSearchParams()
     const [dateModal, setDateModal] = useState<boolean>(false)
+    useEffect(() => {
+        renderTable(1)        
+    })
 
     const connection = new HubConnectionBuilder()
         .withUrl("https://maxim.pamagiti.site/hubs/grade", { withCredentials: false })
@@ -77,7 +80,7 @@ export default function TableGenerator({tableType, isEditMode, table}: PropsInte
                 dates.forEach((date: PresenceInterface, index) => {
                     cells.push(<EmptyTableCell connection={connection} changePresenceState={changePresenceState} cellType={tableType} presence={date.isPresent} studentId={student.studentId} date={date.date} classId={date.classId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
                     if(index == dates.length-1){
-                        cells.push(<EmptyTableCell cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                     }
                 });
             
@@ -86,9 +89,9 @@ export default function TableGenerator({tableType, isEditMode, table}: PropsInte
             cells = []
             cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={''} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah last"} />)
                 dates.forEach((date: PresenceInterface, index) => {
-                    cells.push(<EmptyTableCell cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.date) + " " + String(index)} />);
+                    cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.date) + " " + String(index)} />);
                     if(index == dates.length-1){
-                        cells.push(<EmptyTableCell cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                     }
             });
             rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)

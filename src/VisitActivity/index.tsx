@@ -2,7 +2,7 @@ import LeftNavBar from "../shared/components/LeftNavBar"
 import TableGenerator from "../shared/tableComponents/TableGenerator"
 import TopNavBar from "../shared/components/TopNavBar"
 import { useEffect, useState } from "react"
-import { getGroups, getVisitsTable, getDisciplines } from "../shared/utils/apiRequests"
+import { getGroups, getVisitsTable, getDisciplines, getDisciplinesByGroup } from "../shared/utils/apiRequests"
 import { useSearchParams } from "react-router-dom"
 import type { DisciplineInterface, GroupInterface, TableSample } from "../shared/types/fromRequests"
 
@@ -24,6 +24,12 @@ function VisitActivity() {
                 setIsTableReady(true)
             }
         }
+        const reloadDisciplines = async () => {
+            let res: DisciplineInterface[] | undefined = await getDisciplinesByGroup(tableIds[0])
+            if (res) {
+                setDisciplines(res)
+            }
+        }
         const getGroupsAndDisciplines = async () => {
             let respGroups: GroupInterface[] | undefined = await getGroups()
             let respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
@@ -35,18 +41,26 @@ function VisitActivity() {
             }
             setIsLoading(false)
         }
-        if (tableIds.length > 0) {
+        if (tableIds.length > 1) {
             getTable()
+            reloadDisciplines()
+        } else if (tableIds.length > 0) {
+            reloadDisciplines()
+        } else {
+            getGroupsAndDisciplines()
         }
-        getGroupsAndDisciplines()
+        
 
     }, [tableIds])
 
     const handleSearch = () => {
         let groupid = searchParams.get("groupid")
         let disciplineid = searchParams.get("disciplineid")
+
         if ((groupid != 'null' && disciplineid != 'null') && disciplineid && groupid) {
             setTableIds([Number(groupid), Number(disciplineid)])
+        } else if (groupid && groupid != 'null') {
+            setTableIds([Number(groupid)])
         }
     }
     if (isLoading) {
@@ -65,7 +79,6 @@ function VisitActivity() {
         </div>
         )
     }
-
     return (
         <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
             <div className="w-[90%] flex flex-col gap-6.25">

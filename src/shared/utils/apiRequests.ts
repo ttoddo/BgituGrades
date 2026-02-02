@@ -36,10 +36,18 @@ export const getGroups = async () => {
 
 export const getDisciplines = async () => {
     try {
-        let result: Response<DisciplineInterface[]> = await instance.get("/api/discipline")
+        let result: Response<DisciplineInterface[]> = await instance.get("/api/discipline/all")
         return result.data
     } catch (error) {
         console.log(error)
     }
 }
 
+export const getDisciplinesByGroup = async (groupId: number) => {
+    try {
+        let result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupid=${groupId}`)
+        return result.data
+    } catch (error) {
+        console.log(error)
+    }
+}

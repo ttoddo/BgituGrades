@@ -17,9 +17,9 @@ interface PropsInterface{
 
 
 export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch}: PropsInterface){
-    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | null>()
+    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | null>(null)
     const [query, setQuery] = useState(``)
-    const [searchParams ,setSearchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
     useEffect(() => {
         handleSearch()
     }, [searchParams])
@@ -32,17 +32,15 @@ export default function Input({textChildren="Группа", helpText="Назва
             if (inputType == "group") {
                 let params = new URLSearchParams()
                 let disciplineId = searchParams.get("disciplineid")
-                let groupId = searchParams.get("groupid")
-                params.append("groupid", groupId ? groupId : String(e.id))
+                params.append("groupid", String(e.id))
                 if (disciplineId) {
                     params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
                 }
                 setSearchParams(params)
             } else if (inputType == "discipline") {
                 let params = new URLSearchParams()
-                let disciplineId = searchParams.get("disciplineid")
                 let groupId = searchParams.get("groupid")
-                params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
+                params.append("disciplineid", String(e.id))
                 if (groupId) {
                     params.append("groupid", groupId ? groupId : String(e.id))
                 }
@@ -63,7 +61,7 @@ export default function Input({textChildren="Группа", helpText="Назва
             <div className="relative">
                 <Combobox value={selectedValue}  onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput
-                        className="w-62.5 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
+                        className="w-65 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
                         aria-label="Assignee"
                         displayValue={(val: GroupInterface | DisciplineInterface) => val?.name}
                         onChange={(event) => setQuery(event.target.value)}
@@ -71,7 +69,7 @@ export default function Input({textChildren="Группа", helpText="Назва
                         <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
                             <Arrow onClick={handleClick} className="h-6 w-6 absolute top-2.5 right-2.5"/>
                         </ComboboxButton>
-                    <ComboboxOptions  anchor="bottom" className="w-62.5 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg">
+                    <ComboboxOptions  anchor="bottom" className="w-65 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg">
                         {filterValues.map((val) => (
                             <ComboboxOption key={val.id} id={String(val.id)}  value={val} className="bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD p-2.5">
                                 {val.name}

@@ -15,8 +15,8 @@ function TopNavBar({groups, disciplines, handleSearch}: PropsInterface){
        <div className="h-25 mt-13.75 flex justify-between pl-3.75 items-end">
             <div className="flex gap-6.25 items-end">
                 <img className="mr-3.25" src={Image} alt="img" />
-                <Input handleSearch={handleSearch} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
                 <Input handleSearch={handleSearch} inputType="group" array={groups} textChildren="Группа" helpText="Название группы..."/>
+                <Input handleSearch={handleSearch} inputType="discipline" array={disciplines} textChildren="Дисциплина" helpText="Название дисциплины..."/>
             </div> 
             <div className="flex gap-6.25">
                 <Button children="Редактировать"/>

@@ -1,6 +1,6 @@
 import { Select } from "@headlessui/react";
 import type { HubConnection } from "@microsoft/signalr";
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import type { PresenceInterface } from "../types/fromRequests";
 
 interface PropsInterface {
@@ -12,7 +12,7 @@ interface PropsInterface {
     date?: string;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     connection?: HubConnection
-
+    disabled?: boolean
 }
 
 interface DataInterface {
@@ -21,10 +21,13 @@ interface DataInterface {
     presences: PresenceInterface[]
 }
 
-export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection}: PropsInterface){ 
+export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection, disabled = false}: PropsInterface){ 
     const [selectedValue, setSelectedValue] = useState<string>(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
 
-
+    useEffect(() => {
+        setSelectedValue(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
+        setPIdor(presence == "PRESENT" ? true : false)
+    }, [presence])
     const handleUpdate = (data: DataInterface) => {
         console.log(data)
         if (Number(data.presences[0].classId) == classId && Number(data.studentId) == studentId && data.presences[0].date == date) {
@@ -78,7 +81,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
     }
     
     return (
-        <Select onChange={handleChange} value={selectedValue} className={`block w-full h-full appearance-none
+        <Select disabled={disabled} onChange={handleChange} value={selectedValue} className={`block w-full h-full appearance-none
         focus:not-data-focus:outline-none text-tLight dark:text-tLightD text-[15px]
         text-center ${(pIdor ? "opacity-0 " : "opacity-100 ") + takeColor(selectedValue)} `}>
             {selectData.map((val) => (
