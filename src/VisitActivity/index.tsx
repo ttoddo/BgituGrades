@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom"
 
 function VisitActivity() {
     const [searchParams] = useSearchParams()
-    const [isEditMode, setIsEditMode] = useState(false)
+    const [isEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [groups, setGroups] = useState<Array<JSON>>([])
     const [disciplines, setDisciplines] = useState<Array<JSON>>([])
@@ -51,7 +51,7 @@ function VisitActivity() {
         }
     }
     if (isLoading) {
-        return (<div>Глотай сперму</div>)
+        return (<div>Всё плохо</div>)
     }
     if (isTableReady) {
         return (
