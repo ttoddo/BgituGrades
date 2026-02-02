@@ -18,7 +18,8 @@ interface PropsInterface{
 
 export default function CustomSelect({selectData = ["П", "Н", "У"], presence, changePresenceState, studentId, classId, date, connection}: PropsInterface){ 
     const [selectedValue, setSelectedValue] = useState<string>(presence == "ABSENT" ? "Н" : "П")
-    
+    const [bg, setBg] = useState<string>()
+
 
     const handleUpdate = (data) => {
         //console.log(data.presences[0])
@@ -40,16 +41,20 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence,
         if (changePresenceState){
             changePresenceState(e.target.value == "Н" ? "ABSENT" : "PRESENT", studentId, classId, date)
         }
-        
+        if(e.target.value == "Н"){
+            setBg("bg-red")
+        } else if(e.target.value == "У"){
+            setBg("bg-orange")
+        }
 
     }
     
     return (
         <Select onChange={handleChange} value={selectedValue} className={`block w-full h-full appearance-none
         focus:not-data-focus:outline-none text-tLight dark:text-tLightD bg-bgDark dark:bg-bgDarkD text-[15px]
-        text-center ${pIdor ? "opacity-0" : "opacity-100"} `}>
+        text-center ${pIdor ? "opacity-0 " : "opacity-100 " + bg} `}>
             {selectData.map((val) => (
-                <option>
+                <option className="bg-bgDark dark:bg-bgDarkD">
                     {val}
                 </option>
             ))}
