@@ -3,7 +3,7 @@ import EmptyTableCell from "./EmptyTableCell";
 import FirstTableCell from "./FirstTableCell";
 import EditableTableCell from "./EditableTableCell";
 import StudentModal from "../modals/StudentModal";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useSearchParams } from "react-router-dom";
 import DateModal from "../modals/DateModal";
 import type { PresenceInterface, TableSample } from "../types/fromRequests";
@@ -14,10 +14,11 @@ interface PropsInterface{
     tableType: "work" | "date";
     isEditMode: boolean;
     table?: TableSample;
+    connection: HubConnection;
 }
 
 
-export default function TableGenerator({tableType, isEditMode, table}: PropsInterface){
+export default function TableGenerator({tableType, isEditMode, table, connection}: PropsInterface){
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [searchParams] = useSearchParams()
     const [dateModal, setDateModal] = useState<boolean>(false)
@@ -25,13 +26,7 @@ export default function TableGenerator({tableType, isEditMode, table}: PropsInte
         renderTable(1)        
     })
 
-    const connection = new HubConnectionBuilder()
-        .withUrl("https://maxim.pamagiti.site/hubs/grade", { withCredentials: false })
-        .build()
 
-    connection.start()
-        .then(() => console.log("Подключились к сигналу"))
-        .catch(err => console.log("Не подключились к сигналу:", err))
 
     connection.on("ReceivePresence", (data) => console.log(data))
     const openDateModal = () => {

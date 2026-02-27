@@ -55,7 +55,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
 
     // Божественное откровение
     const [pIdor, setPIdor] = useState<boolean>(presence == "PRESENT" ? true : false)
-
+    // Пробуем написать что-то с Emacs
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSelectedValue(e.target.value)
         setPIdor(e.target.value == "П")

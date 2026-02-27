@@ -8,23 +8,14 @@ const instance = axios.create({
     headers: {
         'Accept': '*/*',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'key': localStorage.getItem("api_key")
     }
 });
 
 interface Response<T> {
     data: T;
 }
-
-export const getVisitsTable = async (groupId: number, disciplineId: number) => {
-    try {
-        let data: Response<TableSample> = await instance.get(`/api/class/presenceGrade?groupId=${groupId}&disciplineId=${disciplineId}`);
-        return data.data
-        } catch (error) {
-        console.error(error);
-    }
-}
-
 export const getGroups = async () => {
     try {
         let result: Response<GroupInterface[]> = await instance.get("/api/group/all")

@@ -2,9 +2,10 @@ import LeftNavBar from "../shared/components/LeftNavBar"
 import TableGenerator from "../shared/tableComponents/TableGenerator"
 import TopNavBar from "../shared/components/TopNavBar"
 import { useEffect, useState } from "react"
-import { getGroups, getVisitsTable, getDisciplines, getDisciplinesByGroup } from "../shared/utils/apiRequests"
+import { getGroups, getDisciplines, getDisciplinesByGroup } from "../shared/utils/apiRequests"
 import { useSearchParams } from "react-router-dom"
 import type { DisciplineInterface, GroupInterface, TableSample } from "../shared/types/fromRequests"
+import { HubConnectionBuilder } from "@microsoft/signalr"
 
 function VisitActivity() {
     const [searchParams] = useSearchParams()
@@ -15,14 +16,25 @@ function VisitActivity() {
     const [tableIds, setTableIds] = useState<number[]>([])
     const [table, setTable] = useState<TableSample>()
     const [isTableReady, setIsTableReady] = useState(false)
+    const connection = new HubConnectionBuilder()
+            .withUrl("https://maxim.pamagiti.site/hubs/grade?key=5521632f1a2017ee08b29ec8eb9fb2134f6509432020c20e371ce8f46c143493",
+                 { withCredentials: false })
+            .withAutomaticReconnect()
+            .build()
+        
 
     useEffect(() => {
         const getTable = async () => {
-            let res: TableSample | undefined = await getVisitsTable(tableIds[0], tableIds[1])
-            if (res) {
-                setTable(res)
-                setIsTableReady(true)
-            }
+            //let res: TableSample | undefined = await getVisitsTable(tableIds[0], tableIds[1])
+            await connection.start()
+                .then(() => {
+                    console.log("Подключились к сигналу")
+                })
+                .catch(err => console.log("Не подключились к сигналу:", err))
+            await connection.invoke("GetPresenceGrade", {
+                disciplineId: tableIds[1],
+                groupId: tableIds[0]
+            }).catch(err => {console.log(err)})
         }
         const reloadDisciplines = async () => {
             let res: DisciplineInterface[] | undefined = await getDisciplinesByGroup(tableIds[0])
@@ -49,9 +61,17 @@ function VisitActivity() {
         } else {
             getGroupsAndDisciplines()
         }
-        
-
+        let key = searchParams.get("key")
+        if (key) {
+            localStorage.setItem("api_key", key)
+        }     
     }, [tableIds])
+
+    connection.on("ReceivePresences", (data) => {
+        console.log(data)
+        setTable(data)
+        setIsTableReady(true)
+    })
 
     const handleSearch = () => {
         let groupid = searchParams.get("groupid")
@@ -73,7 +93,7 @@ function VisitActivity() {
                 <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups}/>
                 <div className="flex gap-6.25">
                     <LeftNavBar visitsStatus={true} tasksStatus={false}/>
-                    <TableGenerator table={table} isEditMode={isEditMode} tableType="date"/>
+                    <TableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection}/>
                 </div>
             </div>
         </div>
@@ -85,7 +105,7 @@ function VisitActivity() {
                 <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups}/>
                 <div className="flex gap-6.25">
                     <LeftNavBar visitsStatus={true} tasksStatus={false}/>
-                    <TableGenerator isEditMode={isEditMode} tableType="date"/>
+                    <TableGenerator isEditMode={isEditMode} tableType="date" connection={connection}/>
                 </div>
             </div>
         </div> 

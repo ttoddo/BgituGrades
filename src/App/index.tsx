@@ -10,8 +10,10 @@ function App() {
   const [theme, setTheme] = useState<string>("dark")
   const [authState, setAuthState] = useState(false)
 
+
   useEffect(() => {
     document.body.setAttribute(`data-theme`, theme)
+
     let takeTheme = getTheme();
     if (takeTheme != null){
         setTheme(takeTheme)
