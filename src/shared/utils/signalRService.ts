@@ -1,6 +1,4 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr"
-import type { TableSample } from "../types/fromRequests"
-
 
 
 const startSignalRConnection = async (connection: HubConnection) => {

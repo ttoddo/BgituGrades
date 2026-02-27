@@ -88,8 +88,6 @@ function VisitActivity() {
     }
 
 
-
-
     if (isLoading || connection == null) {
         return (<div>Всё плохо</div>)
     }

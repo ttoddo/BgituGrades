@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { DisciplineInterface, GroupInterface, TableSample } from '../types/fromRequests';
+import type { DisciplineInterface, GroupInterface } from '../types/fromRequests';
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
 const instance = axios.create({
