@@ -3,7 +3,7 @@ import EmptyTableCell from "./EmptyTableCell";
 import FirstTableCell from "./FirstTableCell";
 import EditableTableCell from "./EditableTableCell";
 import StudentModal from "../modals/StudentModal";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection } from "@microsoft/signalr";
 import { useSearchParams } from "react-router-dom";
 import DateModal from "../modals/DateModal";
 import type { PresenceInterface, TableSample } from "../types/fromRequests";
@@ -14,7 +14,7 @@ interface PropsInterface{
     tableType: "work" | "date";
     isEditMode: boolean;
     table?: TableSample;
-    connection: HubConnection;
+    connection: HubConnection
 }
 
 
@@ -23,12 +23,14 @@ export default function TableGenerator({tableType, isEditMode, table, connection
     const [searchParams] = useSearchParams()
     const [dateModal, setDateModal] = useState<boolean>(false)
     useEffect(() => {
-        renderTable(1)        
+        renderTable(1)    
+            
     })
-
-
-
     connection.on("ReceivePresence", (data) => console.log(data))
+
+    
+
+    
     const openDateModal = () => {
         setDateModal(true)
     }
@@ -42,13 +44,21 @@ export default function TableGenerator({tableType, isEditMode, table, connection
         setStudentModal(false)
     }
     const changePresenceState = (presenceState: string, studentId: number, classId: number, date: string) => {
+        console.log(
+            presenceState,
+            studentId,
+            classId,
+            date,
+            searchParams.get('disciplineid')
+        )
         connection.invoke("UpdatePresenceGrade", { 
             studentId,
             classId,
             date,
             isPresent: presenceState,
             disciplineId: Number(searchParams.get('disciplineid'))
-        })
+        })            
+
     }
     const renderTable = (tableIndex:number) => {
         const rows = [];
