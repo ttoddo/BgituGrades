@@ -8,13 +8,14 @@ interface EmptyPropsInterface{
     studentId?: number;
     classId?: number;
     date?: string;
+    changeMarkState?: (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => void;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
     connection?: HubConnection
     disabled?: boolean
 }
 
 
-export default function EmptyTableCell({cellType, className = "", changePresenceState, studentId, classId, date, connection, presence, disabled = false}: EmptyPropsInterface){
+export default function EmptyTableCell({cellType, className = "", changePresenceState, changeMarkState, studentId, classId, date, connection, presence, disabled = false}: EmptyPropsInterface){
     const selectDataMarks = ["2", "3", "4", "5", "+"]
     const selectDataVisit = ["Н", "У", "П"]
 
@@ -28,7 +29,7 @@ export default function EmptyTableCell({cellType, className = "", changePresence
         case "work":
             return (
                 <td className={className}>
-                    <CustomSelect disabled={disabled} connection={connection} studentId={studentId} classId={classId} date={date} selectData={selectDataMarks} />
+                    <CustomSelect disabled={disabled} connection={connection} studentId={studentId} classId={classId} date={date} changeMarkState={changeMarkState} selectData={selectDataMarks} />
                 </td>
             )
         default:

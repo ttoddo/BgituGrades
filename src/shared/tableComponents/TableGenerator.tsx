@@ -6,7 +6,7 @@ import StudentModal from "../modals/StudentModal";
 import { HubConnection } from "@microsoft/signalr";
 import { useSearchParams } from "react-router-dom";
 import DateModal from "../modals/DateModal";
-import type { PresenceInterface, TableSample } from "../types/fromRequests";
+import type { PresenceInterface, TableSample, WorkInterface, WorkTableSample } from "../types/fromRequests";
 
 
 
@@ -22,11 +22,9 @@ export default function TableGenerator({tableType, isEditMode, table, connection
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [searchParams] = useSearchParams()
     const [dateModal, setDateModal] = useState<boolean>(false)
-    useEffect(() => {
-        renderTable(1)    
-            
-    })
+    
     connection.on("ReceivePresence", (data) => console.log(data))
+    connection.on("ReceiveMarks", (data) => console.log(data))
 
     
 
@@ -42,6 +40,9 @@ export default function TableGenerator({tableType, isEditMode, table, connection
     }
     const closeStudentModal = () => {
         setStudentModal(false)
+    }
+    const openWorkModal = () => {
+        setStudentModal(true)
     }
     const changePresenceState = (presenceState: string, studentId: number, classId: number, date: string) => {
         console.log(
@@ -60,54 +61,120 @@ export default function TableGenerator({tableType, isEditMode, table, connection
         })            
 
     }
+
+
+    const changeMarkState  = (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => {
+        console.log(
+            markState,
+            studentId,
+            workId,
+            date,
+            value,
+            isOverdue,
+            searchParams.get('disciplineid')
+        )
+        connection.invoke("UpdateMarkGrade", {
+            date,
+            value,
+            isOverdue,
+            studentId,
+            workId,
+            disciplineId: Number(searchParams.get('disciplineid'))
+        })
+    }
+
+
     const renderTable = (tableIndex:number) => {
         const rows = [];
         let cells = [];
-        if (table && table?.length > 0) {
-            const dates = table[0].presences
-            cells.push(<FirstTableCell topTitle="Дата" botTitle="ФИО" className="min-w-56.25 h-12.5" key={"Allah"}/>)
-                    dates.forEach((date, dateIndex) => {
-                        const dataObj = new Date(date.date);
-                        const formattedDate = dataObj.toLocaleDateString("ru-RU", {
-                            month: 'numeric',
-                            day: 'numeric',
-                        })
-                        cells.push(<EditableTableCell onClick={openDateModal} cellType="date" cellData={formattedDate} cellDateType={date.classType == "PRACTICE" ? "Прак" : "Лек"} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah" + String(dateIndex)} />);
-                        if(dateIndex == dates.length-1){
-                            cells.push(<EditableTableCell onClick={openDateModal} cellType="date" cellData={""} cellDateType={null} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah left"} />)
+
+        if(tableType == "date"){
+            if (table && table?.length > 0) {
+                const dates = table[0].presences
+                cells.push(<FirstTableCell topTitle="Дата" botTitle="ФИО" className="min-w-56.25 h-12.5" key={"Allah"}/>)
+                        dates.forEach((date, dateIndex) => {
+                            const dataObj = new Date(date.date);
+                            const formattedDate = dataObj.toLocaleDateString("ru-RU", {
+                                month: 'numeric',
+                                day: 'numeric',
+                            })
+                            cells.push(<EditableTableCell onClick={openDateModal} cellType="date" cellData={formattedDate} cellDateType={date.classType == "PRACTICE" ? "Прак" : "Лек"} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah" + String(dateIndex)} />);
+                            if(dateIndex == dates.length-1){
+                                cells.push(<EditableTableCell onClick={openDateModal} cellType="date" cellData={""} cellDateType={null} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah left"} />)
+                            }
+                        });
+                rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"allah2"}>{cells}</tr>)
+                table.forEach((student: TableSample[0], idx) => {
+                    let cells = [];
+                    let dates = student.presences
+                    cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah" + String(idx)} />)
+                    dates.forEach((date: PresenceInterface, index) => {
+                        cells.push(<EmptyTableCell connection={connection} changePresenceState={changePresenceState} cellType={tableType} presence={date.isPresent} studentId={student.studentId} date={date.date} classId={date.classId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
+                        if(index == dates.length-1){
+                            cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                         }
                     });
-            rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"allah2"}>{cells}</tr>)
-            table.forEach((student: TableSample[0], idx) => {
-                let cells = [];
-                let dates = student.presences
-                cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah" + String(idx)} />)
-                dates.forEach((date: PresenceInterface, index) => {
-                    cells.push(<EmptyTableCell connection={connection} changePresenceState={changePresenceState} cellType={tableType} presence={date.isPresent} studentId={student.studentId} date={date.date} classId={date.classId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
-                    if(index == dates.length-1){
-                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
-                    }
+                
+                    rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={idx}>{cells}</tr>)
+                })
+                cells = []
+                cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={''} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah last"} />)
+                    dates.forEach((date: PresenceInterface, index) => {
+                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.date) + " " + String(index)} />);
+                        if(index == dates.length-1){
+                            cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+                        }
                 });
-            
-                rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={idx}>{cells}</tr>)
-            })
-            cells = []
-            cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={''} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah last"} />)
-                dates.forEach((date: PresenceInterface, index) => {
-                    cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.date) + " " + String(index)} />);
-                    if(index == dates.length-1){
-                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
-                    }
-            });
-            rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
-        }
-        return (
-        <table className="block border-separate border-spacing-0.5 border-bgModal max-w-full max-h-142.5 rounded-lg overflow-auto" key={tableIndex}>
-            <tbody>{rows}</tbody>
-        </table>
-        );
-  };
+                rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
+            }
 
+        } else if (tableType == "work"){
+            if(table && table.length > 0){
+                console.log(table[0].marks)
+                const works = table[0].marks
+                cells.push(<FirstTableCell topTitle="Работы" botTitle="ФИО" className="min-w-56.25 h-12.5" key={"Allah"} />)
+                works.forEach((work: WorkInterface, workIndex: number) => {
+                    cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData={work.name} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah" + String(workIndex)} />)
+                    if (workIndex == works.length-1){
+                        cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData="" className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allahi" + String(workIndex)} />)
+                    }
+                })
+                rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"allah2"}>{cells}</tr>)
+                table.forEach((student: WorkTableSample[0], idx:number) => {
+                    const cells = [];
+                    console.log(student)
+                    const works = student.marks;
+                    cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allahs" + String(idx)} />)
+                    works.forEach((work: WorkInterface, index: number) => {
+                        cells.push(<EmptyTableCell connection={connection} changePresenceState={changePresenceState} cellType={tableType} studentId={student.studentId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
+                        if(index == works.length-1){
+                            cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+                        }
+                    })
+                    rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={idx}>{cells}</tr>)
+
+                })
+                cells = []
+                cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={''} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah last"} />)
+                    works.forEach((date: PresenceInterface, index: number) => {
+                        cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.date) + " " + String(index)} />);
+                        if(index == works.length-1){
+                            cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+                        }
+                });
+                rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
+            }
+        return (
+            <table className="block border-separate border-spacing-0.5 border-bgModal max-w-full max-h-142.5 rounded-lg overflow-auto" key={tableIndex}>
+                <tbody>{rows}</tbody>
+            </table>
+        );
+        }
+  };
+  useEffect(() => {
+        renderTable(1)    
+            
+    })
     return (
         <div key={1} className="w-full">
             {renderTable(1)}

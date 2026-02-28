@@ -21,11 +21,25 @@ export interface PresenceInterface {
     date: string;
     isPresent: "PRESENT" | "ABSENTVALID" | "ABSENTINVALID"
 }
+
+export interface WorkInterface {
+    workId: number;
+    name: string;
+    value: null | string
+}
  
-export type TableSample = [
+export type DateTableSample = [
     {
         studentId: number;
         name: string;
-        presences: PresenceInterface[]
+        presences: PresenceInterface[] 
+    }
+]
+
+export type WorkTableSample = [
+    {
+        studentId: number;
+        name: string;
+        marks: WorkInterface[] 
     }
 ]

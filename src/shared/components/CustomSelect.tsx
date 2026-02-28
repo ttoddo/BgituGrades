@@ -11,6 +11,7 @@ interface PropsInterface {
     studentId?: number;
     date?: string;
     changePresenceState?: (presenceState: string, studentId: number, classId: number, date: string) => void;
+    changeMarkState?: (markState: string, studentId: number, workId: number, date: string, value: string, isOverdue: boolean) => void;
     connection?: HubConnection
     disabled?: boolean
 }
@@ -23,7 +24,7 @@ interface DataInterface {
 
 export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection, disabled = false}: PropsInterface){ 
     const [selectedValue, setSelectedValue] = useState<string>(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
-
+    const [pIdor, setPIdor] = useState<boolean>(presence == "PRESENT" ? true : false)
     useEffect(() => {
         setSelectedValue(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
         setPIdor(presence == "PRESENT" ? true : false)
@@ -54,7 +55,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
 
 
     // Божественное откровение
-    const [pIdor, setPIdor] = useState<boolean>(presence == "PRESENT" ? true : false)
+
     // Пробуем написать что-то с Emacs
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSelectedValue(e.target.value)

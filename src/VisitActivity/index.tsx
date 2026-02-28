@@ -59,6 +59,7 @@ function VisitActivity() {
                 groupId: tableIds[0]
             })       
         } else if (tableIds.length > 0) {
+           
             reloadDisciplines()
         } else {
             getGroupsAndDisciplines()
@@ -82,6 +83,7 @@ function VisitActivity() {
 
     if (connection) {
         connection.on("ReceivePresences", (data) => {
+            console.log(data)
             setTable(data)
             setIsTableReady(true)
         })
