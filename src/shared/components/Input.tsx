@@ -34,9 +34,10 @@ export default function Input({textChildren="Группа", helpText="Назва
             }
         });
         changeValue(elementToSet)
-    
         handleSearch()
-    }, [array, handleSearch, inputType, searchParams])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams])
     const handleClick = () => {
        return filterValues
     }
