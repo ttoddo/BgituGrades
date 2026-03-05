@@ -1,9 +1,9 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import TopNavBar from "../shared/components/TopNavBar"
-import TableGenerator from "../shared/tableComponents/TableGenerator"
+import WorkTableGenerator from "../shared/tableComponents/WorkTableGenerator"
 import { useEffect, useState } from "react"
-import type { TableSample, DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
+import type { WorkTableSample, DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
 import { getDisciplines, getDisciplinesByGroup, getGroups } from "../shared/utils/apiRequests"
 import setupSignalRConnection from "../shared/utils/signalRService"
 import { HubConnection } from "@microsoft/signalr"
@@ -16,14 +16,14 @@ export default function TaskActivity() {
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
     const [connection, setConnection] = useState<null | HubConnection>(null)
-    const [table, setTable] = useState<TableSample>()
+    const [table, setTable] = useState<WorkTableSample>()
     const [isTableReady, setIsTableReady] = useState(false)
 
 
 
     useEffect(() => {
         const establishConnection = async () => {
-            const con = await setupSignalRConnection()
+            const con = await setupSignalRConnection(localStorage.getItem("api_key"))
             console.log(con.state)
 
             setConnection(con)
@@ -111,7 +111,7 @@ export default function TaskActivity() {
                     <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={true}/>
-                        <TableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
+                        <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@ export default function TaskActivity() {
                     <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines}/>
                     <div className="flex gap-6.25">
                         <LeftNavBar visitsStatus={false} tasksStatus={true}/>
-                        <TableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
+                        <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
                     </div>
                 </div>
             </div>

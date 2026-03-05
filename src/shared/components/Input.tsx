@@ -22,18 +22,21 @@ export default function Input({textChildren="Группа", helpText="Назва
     const [searchParams, setSearchParams] = useSearchParams()
 
     useEffect(() => {
-        let disciplineId = searchParams.get("disciplineid")
-        let groupId = searchParams.get("groupid")
+        const changeValue = async (value: GroupInterface | DisciplineInterface | null) => {
+            setSelectedValue(value)
+        } 
+        const disciplineId = searchParams.get("disciplineid")
+        const groupId = searchParams.get("groupid")
         let elementToSet: GroupInterface | DisciplineInterface | null = null;
         array.forEach(element => {
             if ((element.id == Number(groupId) && inputType == "group") || (element.id == Number(disciplineId) && inputType == "discipline")) {
                 elementToSet = element
             }
         });
-        setSelectedValue(elementToSet)
-
+        changeValue(elementToSet)
+    
         handleSearch()
-    }, [searchParams])
+    }, [array, handleSearch, inputType, searchParams])
     const handleClick = () => {
        return filterValues
     }
@@ -41,16 +44,16 @@ export default function Input({textChildren="Группа", helpText="Назва
         setSelectedValue(e)
         if (e){
             if (inputType == "group") {
-                let params = new URLSearchParams()
-                let disciplineId = searchParams.get("disciplineid")
+                const params = new URLSearchParams()
+                const disciplineId = searchParams.get("disciplineid")
                 params.append("groupid", String(e.id))
                 if (disciplineId) {
                     params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
                 }
                 setSearchParams(params)
             } else if (inputType == "discipline") {
-                let params = new URLSearchParams()
-                let groupId = searchParams.get("groupid")
+                const params = new URLSearchParams()
+                const groupId = searchParams.get("groupid")
                 params.append("disciplineid", String(e.id))
                 if (groupId) {
                     params.append("groupid", groupId ? groupId : String(e.id))
@@ -65,6 +68,7 @@ export default function Input({textChildren="Группа", helpText="Назва
             : array.filter((val) => {
                 return val.name.toLowerCase().includes(query.toLowerCase())
             })
+            
 
     return(
          <div className="flex flex-col gap-2.5">

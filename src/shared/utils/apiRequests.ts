@@ -18,7 +18,7 @@ interface Response<T> {
 }
 export const getGroups = async () => {
     try {
-        let result: Response<GroupInterface[]> = await instance.get("/api/group/all")
+        const result: Response<GroupInterface[]> = await instance.get("/api/group/all")
         return result.data
     } catch (error) {
         console.log(error)
@@ -27,7 +27,7 @@ export const getGroups = async () => {
 
 export const getDisciplines = async () => {
     try {
-        let result: Response<DisciplineInterface[]> = await instance.get("/api/discipline/all")
+        const result: Response<DisciplineInterface[]> = await instance.get("/api/discipline/all")
         return result.data
     } catch (error) {
         console.log(error)
@@ -36,7 +36,7 @@ export const getDisciplines = async () => {
 
 export const getDisciplinesByGroup = async (groupId: number) => {
     try {
-        let result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupid=${groupId}`)
+        const result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupid=${groupId}`)
         return result.data
     } catch (error) {
         console.log(error)

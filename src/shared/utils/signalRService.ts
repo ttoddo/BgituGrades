@@ -10,12 +10,14 @@ const startSignalRConnection = async (connection: HubConnection) => {
     
 }
 
-const setupSignalRConnection = async () => {
+const setupSignalRConnection = async (key: string | null) => {
     const connection = new HubConnectionBuilder()
-            .withUrl("https://maxim.pamagiti.site/hubs/grade?key=5521632f1a2017ee08b29ec8eb9fb2134f6509432020c20e371ce8f46c143493",
+            .withUrl("https://maxim.pamagiti.site/hubs/grade?key=" + key,
                     { withCredentials: false })
             .withAutomaticReconnect()
             .build()
+            console.log(key)
+
 
     connection.onclose(error => {
         console.log(error)
