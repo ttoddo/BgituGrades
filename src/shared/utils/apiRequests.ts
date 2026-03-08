@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { DisciplineInterface, GroupInterface } from '../types/fromRequests';
+import type { DisciplineInterface, GroupInterface, StudentLinkInterface } from '../types/fromRequests';
 // Наш бекендер ебень
 axios.defaults.baseURL = import.meta.env.VITE_DOTENV_API_URL
 const instance = axios.create({
@@ -39,6 +39,17 @@ export const getDisciplinesByGroup = async (groupId: number) => {
         const result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupid=${groupId}`)
         return result.data
     } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export const getStudentLink = async (groupId:number, disciplineId: number) => {
+    try {
+        const result: Response<StudentLinkInterface[]> = await instance.get(`/api/kay/shared?groupid=${groupId}&disciplineid=${disciplineId}`)
+        return result.data
+
+    } catch (error){
         console.log(error)
     }
 }

@@ -8,7 +8,7 @@ interface PropsInterface{
     textChildren?: string;
     helpText?: string;
     array: GroupInterface[] | DisciplineInterface[];
-    inputType: "group" | "discipline"
+    inputType: "group" | "discipline" | "student" | "type" | "startDate" | "endDate"
     onChange?: () => void;
     handleSearch: () => void;
 }
@@ -60,6 +60,9 @@ export default function Input({textChildren="Группа", helpText="Назва
                     params.append("groupid", groupId ? groupId : String(e.id))
                 }
                 setSearchParams(params)
+            } else if (inputType == "student") {
+                console.log("studenteki")
+
             }
         }
     }
@@ -77,7 +80,7 @@ export default function Input({textChildren="Группа", helpText="Назва
             <div className="relative">
                 <Combobox value={selectedValue}  onChange={handleChange} onClose={() => setQuery(``)}>
                     <ComboboxInput
-                        className="w-65 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
+                        className="w-58 bg-bgModal dark:bg-bgModalD text-tDark dark:text-tDarkD rounded-lg p-2.5 "
                         aria-label="Assignee"
                         displayValue={(val: GroupInterface | DisciplineInterface) => val?.name}
                         onChange={(event) => setQuery(event.target.value)}

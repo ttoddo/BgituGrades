@@ -97,9 +97,9 @@ function VisitActivity() {
         return (
         <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
             <div className="w-[90%] flex flex-col gap-6.25">
-                <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups}/>
+                <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
                 <div className="flex gap-6.25">
-                    <LeftNavBar visitsStatus={true} tasksStatus={false}/>
+                    <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                     <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection}/>
                 </div>
             </div>
@@ -110,9 +110,9 @@ function VisitActivity() {
     return (
         <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
             <div className="w-[90%] flex flex-col gap-6.25">
-                <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} />
+                <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
                 <div className="flex gap-6.25">
-                    <LeftNavBar visitsStatus={true} tasksStatus={false}/>
+                    <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
                     <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection}/>
                 </div>
             </div>

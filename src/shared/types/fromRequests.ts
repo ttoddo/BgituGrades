@@ -10,6 +10,11 @@ export interface GroupInterface {
     startWeekNumber: string;
 }
 
+
+export interface StudentLinkInterface {
+    link: string;
+}
+
 export interface DisciplineInterface {
     id: number;
     name: string;

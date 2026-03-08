@@ -104,7 +104,7 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
             rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
         }
     return (
-        <table className="block border-separate border-spacing-0.5 border-bgModal max-w-full max-h-142.5 rounded-lg overflow-auto" key={tableIndex}>
+        <table className="block border-separate border-spacing-0.5 w overflow-auto" key={tableIndex}>
             <tbody>{rows}</tbody>
         </table>
     );

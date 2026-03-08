@@ -16,6 +16,7 @@
     --color-tDark: #646A7C;
     --color-tLight: #1D1D1D;
 
+
     --color-primaryD: #5696FD;
     --color-bgDarkD: #101014;
     --color-bgMiddleD: #1C1C21;
@@ -27,6 +28,8 @@
     --color-red: #FF3B30;
     --color-orange: #FF8F30;
     --color-yellow: #FFE630;
+    --color-skeleton: #636261;
+
 }
 
 * {

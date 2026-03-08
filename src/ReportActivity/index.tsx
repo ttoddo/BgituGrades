@@ -1,27 +1,26 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
-import TopNavBar from "../shared/components/TopNavBar"
-import WorkTableGenerator from "../shared/tableComponents/WorkTableGenerator"
 import { useEffect, useState } from "react"
-import type { WorkTableSample, DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
+import type {  DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
 import { getDisciplines, getDisciplinesByGroup, getGroups } from "../shared/utils/apiRequests"
 import setupSignalRConnection from "../shared/utils/signalRService"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
-import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavbarSkeleton"
+import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
+import StudentTopNavBar from "../shared/components/StudentTopNavBar"
+import ReportGenerator from "../shared/tableComponents/ReportGenerator"
 
-
-export default function TaskActivity() {
+export default function ReportActivity() {
     const [searchParams] = useSearchParams()
-    const [isEditMode] = useState(false)
+    //const [isEditMode] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [tableIds, setTableIds] = useState<number[]>([])
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
     const [connection, setConnection] = useState<null | HubConnection>(null)
-    const [table, setTable] = useState<WorkTableSample>()
-    const [isTableReady, setIsTableReady] = useState(false)
+    //const [table, setTable] = useState<WorkTableSample>()
+    //const [isTableReady, setIsTableReady] = useState(false)
 
 
 
@@ -97,14 +96,13 @@ export default function TaskActivity() {
 
     }
 
+    // if (connection) {
+    //     connection.on("ReceiveMarks", (data) => {
+    //         setTable(data)
+    //         setIsTableReady(true)
 
-    if (connection) {
-        connection.on("ReceiveMarks", (data) => {
-            setTable(data)
-            setIsTableReady(true)
-
-        })
-    }
+    //     })
+    // }
 
     if(isLoading ){
         return (
@@ -119,14 +117,14 @@ export default function TaskActivity() {
             </div>)
     }
 
-    if(isTableReady && connection) {
+    if(/*isTableReady &&*/ connection) {
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
+                    <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines}/>
                     <div className="flex gap-6.25">
-                        <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
-                        <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
+                        <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
+                        <ReportGenerator />
                     </div>
                 </div>
             </div>
@@ -137,10 +135,10 @@ export default function TaskActivity() {
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
+                    <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines}/>
                     <div className="flex gap-6.25">
-                        <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
-                        <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
+                        <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
+                        <ReportGenerator />
                     </div>
                 </div>
             </div>
