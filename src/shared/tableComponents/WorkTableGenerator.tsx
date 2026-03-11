@@ -22,10 +22,9 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
     const [studentModal, setStudentModal] = useState<boolean>(false)
     const [workModal, setWorkModal] = useState<boolean>(false)
     const [searchParams] = useSearchParams()
-    
-    connection.on("ReceiveMarks", (data) => console.log(data))
 
-    
+    // Вывод информации при получении данных, УДАЛИТЬ НА ПРОДЕ
+    connection.on("ReceiveMarks", (data) => console.log(data))
 
 
     const openStudentModal = () => {
@@ -69,35 +68,46 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
 
         
         if(table && table.length > 0){
-            console.log(table[0].marks)
+            // Угловая ячейка
             const works = table[0].marks
             cells.push(<FirstTableCell topTitle="Работы" botTitle="ФИО" className="min-w-56.25 h-12.5" key={"Allah"} />)
+            
+            // Первая строка
             works.forEach((work: WorkInterface, workIndex: number) => {
                 cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData={work.name} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah" + String(workIndex)} />)
+                // Если элемент последний, добавляем доп ячейку с плюсиком
                 if (workIndex == works.length-1){
                     cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData="" className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allahi" + String(workIndex)} />)
                 }
             })
             rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"allah2"}>{cells}</tr>)
+            
+            // Остальные строки
             table.forEach((student: WorkTableSample[0], idx:number) => {
                 const cells = [];
-                console.log(student)
                 const works = student.marks;
+                // ФИО Студента
                 cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={student.name} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allahs" + String(idx)} />)
+                // Посещения по датам
                 works.forEach((_work: WorkInterface, index: number) => {
                     cells.push(<EmptyTableCell connection={connection} changeMarkState={changeMarkState} cellType={tableType} studentId={student.studentId} className="min-w-12.5 h-12.5 " key={String(idx) + " " + String(index)} />);
                     if(index == works.length-1){
+                        // Заглушка
                         cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                     }
                 })
                 rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={idx}>{cells}</tr>)
 
             })
+            
             cells = []
+            // Пустая строка для добавления студента
             cells.push(<EditableTableCell onClick={openStudentModal} cellType="student" cellData={''} className="min-w-56.25 h-12.5 p-1.25 text-[16px] font-blod text-tLight dark:text-tLightD" key={"Allah last"} />)
+                // Заглушки
                 works.forEach((date: WorkInterface, index: number) => {
                     cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={String(date.name) + " " + String(index)} />);
                     if(index == works.length-1){
+                        // Заглушка
                         cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                     }
             });

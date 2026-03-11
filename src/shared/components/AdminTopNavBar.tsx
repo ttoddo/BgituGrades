@@ -10,8 +10,6 @@ import Button from "./Button";
 export default function AdminTopNavBar(){
 
 
-
-
     return (
         <div className="h-25 ml-33.5 mt-13.75 flex justify-between pl-3.75  items-end">
             <div className="flex gap-6.25 items-end w-200 bg-bgModal dark:bg-bgModalD rounded-lgw relative">

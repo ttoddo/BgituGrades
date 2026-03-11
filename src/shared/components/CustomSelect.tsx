@@ -24,8 +24,10 @@ interface DataInterface {
 
 export default function CustomSelect({selectData = ["П", "Н", "У"], presence = "PRESENT", changePresenceState, studentId, classId, date, connection, disabled = false}: PropsInterface){ 
     const [selectedValue, setSelectedValue] = useState<string>(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
+    // Божественное откровение
     const [pIdor, setPIdor] = useState<boolean>(presence == "PRESENT" ? true : false)
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedValue(presence == "PRESENT" ? "П" : (presence == "ABSENTINVALID" ? "Н" : "У"))
         setPIdor(presence == "PRESENT" ? true : false)
     }, [presence])
@@ -52,11 +54,7 @@ export default function CustomSelect({selectData = ["П", "Н", "У"], presence 
         connection.on("UpdatedPresence", (data) => {handleUpdate(data)})
     }
 
-
-
-    // Божественное откровение
-
-    // Пробуем написать что-то с Emacs
+    // Долгий процесс изменения состояния посещения в одну букву
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSelectedValue(e.target.value)
         setPIdor(e.target.value == "П")

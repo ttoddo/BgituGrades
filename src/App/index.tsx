@@ -12,10 +12,14 @@ function App() {
 
 
   useEffect(() => {
+    // Устанавливаем тему в body, чтобы она была доступна из любой части проекта
     document.body.setAttribute(`data-theme`, theme)
 
-    let takeTheme = getTheme();
+    // Получаем тему из localStorage
+    const takeTheme = getTheme();
     if (takeTheme != null){
+        // Устанавливаем тему, если ее не было в localStorage
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTheme(takeTheme)
     }
     setAuthState(false);

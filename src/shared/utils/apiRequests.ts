@@ -16,6 +16,11 @@ const instance = axios.create({
 interface Response<T> {
     data: T;
 }
+
+/**
+ * Запрос на получение всех групп
+ * @returns Массив групп
+ */
 export const getGroups = async () => {
     try {
         const result: Response<GroupInterface[]> = await instance.get("/api/group/all")
@@ -25,6 +30,10 @@ export const getGroups = async () => {
     }
 }
 
+/**
+ * Запрос на получение всех дисциплин
+ * @returns Массив дисциплин
+ */
 export const getDisciplines = async () => {
     try {
         const result: Response<DisciplineInterface[]> = await instance.get("/api/discipline/all")
@@ -34,6 +43,12 @@ export const getDisciplines = async () => {
     }
 }
 
+
+/**
+ * Получение дисциплин для группы
+ * @param groupId Идентификатор группы
+ * @returns Массив дисциплин для этой группы
+ */
 export const getDisciplinesByGroup = async (groupId: number) => {
     try {
         const result: Response<DisciplineInterface[]> = await instance.get(`/api/discipline?groupid=${groupId}`)
@@ -43,12 +58,16 @@ export const getDisciplinesByGroup = async (groupId: number) => {
     }
 }
 
-
+/**
+ * Получение ссылки для студентов
+ * @param groupId Идентификатор группы
+ * @param disciplineId Идентификатор дисциплины
+ * @returns Ссылка для студентов
+ */
 export const getStudentLink = async (groupId:number, disciplineId: number) => {
     try {
-        const result: Response<StudentLinkInterface[]> = await instance.get(`/api/kay/shared?groupid=${groupId}&disciplineid=${disciplineId}`)
+        const result: Response<StudentLinkInterface> = await instance.get(`/api/key/shared?groupid=${groupId}&disciplineid=${disciplineId}`)
         return result.data
-
     } catch (error){
         console.log(error)
     }

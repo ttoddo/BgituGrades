@@ -1,14 +1,9 @@
 
-
-
-
 interface PropsInterface{
     topTitle: string;
     botTitle: string;
     className?: string; 
 }
-
-
 
 export default function FirstTableCell({topTitle = "Дата", botTitle = "ФИОстудента", className = ""}: PropsInterface){
     return (

@@ -9,6 +9,8 @@ interface PropsInterface{
 
 
 export default function StudentLinkModal({isOpen, close, linkText = ""}: PropsInterface) {
+    
+    // Копирование текста в буфер обмена
     const copyToClipboard = async () => {
         try {
             await navigator.clipboard.writeText(linkText);

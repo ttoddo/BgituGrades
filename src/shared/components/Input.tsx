@@ -22,18 +22,20 @@ export default function Input({textChildren="Группа", helpText="Назва
     const [searchParams, setSearchParams] = useSearchParams()
 
     useEffect(() => {
-        const changeValue = async (value: GroupInterface | DisciplineInterface | null) => {
-            setSelectedValue(value)
-        } 
+        // Поиск query параметров
         const disciplineId = searchParams.get("disciplineid")
         const groupId = searchParams.get("groupid")
+
+        // Установка выбранного параметра после перезапуска страницы
         let elementToSet: GroupInterface | DisciplineInterface | null = null;
         array.forEach(element => {
             if ((element.id == Number(groupId) && inputType == "group") || (element.id == Number(disciplineId) && inputType == "discipline")) {
                 elementToSet = element
             }
         });
-        changeValue(elementToSet)
+        setSelectedValue(elementToSet)
+
+        // Callback на проверку, есть ли оба элемента в query и вывод таблицы
         handleSearch()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,6 +43,8 @@ export default function Input({textChildren="Группа", helpText="Назва
     const handleClick = () => {
        return filterValues
     }
+    
+    // Изменение выбранного элемента и добавление идентификатора в query параметры
     const handleChange = (e: GroupInterface | DisciplineInterface | null) => {
         setSelectedValue(e)
         if (e){
@@ -66,6 +70,8 @@ export default function Input({textChildren="Группа", helpText="Назва
             }
         }
     }
+
+    // Фильтрует массив по алфавиту
     const filterValues = 
         query === ``
             ? array

@@ -1,6 +1,6 @@
 
 /**
- * Интерфейс получаемых из запроса групп
+ * Интерфейс группы
  */
 export interface GroupInterface {
     id: number;
@@ -10,16 +10,24 @@ export interface GroupInterface {
     startWeekNumber: string;
 }
 
-
+/**
+ * Ссылка для студента
+ */
 export interface StudentLinkInterface {
     link: string;
 }
 
+/**
+ * Интерфейс дисциплины
+ */
 export interface DisciplineInterface {
     id: number;
     name: string;
 }
 
+/**
+ * Интерфейс доступных типов посещения
+ */
 export interface PresenceInterface {
     classId: number;
     classType: "PRACTICE" | "LECTURE";
@@ -27,12 +35,18 @@ export interface PresenceInterface {
     isPresent: "PRESENT" | "ABSENTVALID" | "ABSENTINVALID"
 }
 
+/**
+ * Интерфейс информации о работе
+ */
 export interface WorkInterface {
     workId: number;
     name: string;
     value: null | string
 }
  
+/**
+ * Интерфейс таблицы посещений
+ */
 export type DateTableSample = [
     {
         studentId: number;
@@ -41,6 +55,9 @@ export type DateTableSample = [
     }
 ]
 
+/**
+ * Интерфейс таблицы работ
+ */
 export type WorkTableSample = [
     {
         studentId: number;

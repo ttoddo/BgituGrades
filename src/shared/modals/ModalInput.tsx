@@ -10,8 +10,6 @@ interface PropsInterface {
 
 export default function ModalInput({placeholder, children}: PropsInterface) {
 
-
-
     return (
         <Field className="flex flex-col gap-1 text-tLight dark:text-tLightD">
             <Label>{children}</Label>

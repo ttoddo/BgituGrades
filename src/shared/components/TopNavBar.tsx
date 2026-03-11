@@ -15,18 +15,15 @@ interface PropsInterface {
 
 
 function TopNavBar({groups, disciplines, handleSearch, tableIds}: PropsInterface){
-    const [link, setLink] = useState<StudentLinkInterface[]>([])
+    const [link, setLink] = useState<string>()
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
-    
-
-
-
+    // Нажатие на кнопку создать ссылку
     const createStudentLink = async () => {
-        const res: StudentLinkInterface[] | undefined = await getStudentLink(tableIds[0], tableIds[1]);
+        const res: StudentLinkInterface | undefined = await getStudentLink(tableIds[0], tableIds[1]);
         console.log(res)
         if(res) {
-            setLink(res)
+            setLink(res.link)
             setIsOpen(true);
         }
     };
@@ -34,9 +31,6 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds}: PropsInterface
     const closeStudentModal = () => {
         setIsOpen(false);
     }
-
-
-
 
     return (
        <div className="h-25 mt-13.75 flex justify-between pl-3.75 items-end">
@@ -51,11 +45,8 @@ function TopNavBar({groups, disciplines, handleSearch, tableIds}: PropsInterface
                 <Button children="Скачать в Excel"/>
                 <Button children="Поделиться"/>
             </div>
-            <StudentLinkModal isOpen={isOpen} close={closeStudentModal} linkText={link.toString()} />
+            <StudentLinkModal isOpen={isOpen} close={closeStudentModal} linkText={link} />
        </div> 
-       
-
-       
     )
 }
 

@@ -5,11 +5,11 @@ import WorkTableGenerator from "../shared/tableComponents/WorkTableGenerator"
 import { useEffect, useState } from "react"
 import type { WorkTableSample, DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
 import { getDisciplines, getDisciplinesByGroup, getGroups } from "../shared/utils/apiRequests"
-import setupSignalRConnection from "../shared/utils/signalRService"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
-import TopNavBarSkeleton from "../shared/components/skeletons/TopNavbarSkeleton"
+import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
+import { setupSignalRGradesConnection } from "../shared/utils/signalRService"
 
 
 export default function TaskActivity() {
@@ -26,8 +26,9 @@ export default function TaskActivity() {
 
 
     useEffect(() => {
+        // Подключаем сигнал
         const establishConnection = async () => {
-            const con = await setupSignalRConnection(localStorage.getItem("api_key"))
+            const con = await setupSignalRGradesConnection(localStorage.getItem("api_key"))
             console.log(con.state)
 
             setConnection(con)
@@ -46,7 +47,7 @@ export default function TaskActivity() {
             }
         }
 
-
+        // Все группы и дисциалины для полей ввода
         const getGroupsAndDisciplines = async () => {
             const respGroups: GroupInterface[] | undefined = await getGroups()
             const respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
@@ -59,7 +60,7 @@ export default function TaskActivity() {
             setIsLoading(false)
         }
 
-
+        // Проверка, есть ли в query параметрах и дисциплина и группа
         if(tableIds.length > 1){
             reloadDisciplines()
             connection?.invoke("GetMarkGrade", {
@@ -73,6 +74,8 @@ export default function TaskActivity() {
             getGroupsAndDisciplines()
 
         }
+
+        // Проверка, есть ли ключ в query параметрах
         const key = searchParams.get("key")
         if(key) {
             localStorage.setItem("api_key", key)
@@ -84,7 +87,7 @@ export default function TaskActivity() {
 
 
 
-
+    // Поиск таблицы, если оба query параметра заполены
     const handleSearch = () => {
         const groupid = searchParams.get("groupid")
         const disciplineid = searchParams.get("disciplineid")
@@ -97,7 +100,7 @@ export default function TaskActivity() {
 
     }
 
-
+    // Делаем слушатели событий из сигнала, если подключение активно
     if (connection) {
         connection.on("ReceiveMarks", (data) => {
             setTable(data)
@@ -106,29 +109,27 @@ export default function TaskActivity() {
         })
     }
 
-    if(isLoading ){
-        return (
-            <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
-                <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
-                    <TopNavBarSkeleton />
-                    <div className="flex gap-6.25">
-                        <LeftNavBarSkeleton />
-                        <TableGeneratorSkeleton/>
-                    </div>
-                </div>
-            </div>)
-    }
-
     if(isTableReady && connection) {
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
-                <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
-                    <div className="flex gap-6.25">
-                        <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
-                        <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
+                {
+                    // Пришлось сделать так, чтобы не было блика при смене роута
+                    isLoading ? 
+                    <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
+                        <TopNavBarSkeleton />
+                        <div className="flex gap-6.25">
+                            <LeftNavBarSkeleton />
+                            <TableGeneratorSkeleton/>
+                        </div>
+                    </div> :
+                    <div className="w-[90%] flex flex-col gap-6.25">
+                        <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
+                        <div className="flex gap-6.25">
+                            <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false}  adminStatus={false}/>
+                            <WorkTableGenerator table={table} isEditMode={isEditMode} tableType="work" connection={connection}/>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         )
     }
@@ -136,15 +137,36 @@ export default function TaskActivity() {
     if(connection){
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
-                <div className="w-[90%] flex flex-col gap-6.25">
-                    <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
-                    <div className="flex gap-6.25">
-                        <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
-                        <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
+                {
+                    isLoading ? 
+                    <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
+                        <TopNavBarSkeleton />
+                        <div className="flex gap-6.25">
+                            <LeftNavBarSkeleton />
+                            <TableGeneratorSkeleton/>
+                        </div>
+                    </div> :
+                    <div className="w-[90%] flex flex-col gap-6.25">
+                        <TopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} tableIds={tableIds}/>
+                        <div className="flex gap-6.25">
+                            <LeftNavBar visitsStatus={false} tasksStatus={true} reportStatus={false} adminStatus={false}/>
+                            <WorkTableGenerator isEditMode={isEditMode} tableType="work" connection={connection}/>
+                        </div>
                     </div>
-                </div>
+                }
+                
             </div>
         )
     }
+    return (
+        <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+            <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
+                <TopNavBarSkeleton />
+                <div className="flex gap-6.25">
+                    <LeftNavBarSkeleton />
+                    <TableGeneratorSkeleton/>
+                </div>
+            </div>
+        </div>)
 }
 

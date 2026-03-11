@@ -10,22 +10,51 @@ const startSignalRConnection = async (connection: HubConnection) => {
     
 }
 
-const setupSignalRConnection = async (key: string | null) => {
+/**
+ * Функция для подключения к оценкам в сигнаое
+ * @param key Секрет-ключ для подключения
+ * @returns Подключение к сигналу
+ */
+const setupSignalRGradesConnection = async (key: string | null) => {
     const connection = new HubConnectionBuilder()
             .withUrl("https://maxim.pamagiti.site/hubs/grade?key=" + key,
                     { withCredentials: false })
             .withAutomaticReconnect()
             .build()
-            console.log(key)
 
-
+    // Если подключение срывается, мы пытаемся заново подключиться
     connection.onclose(error => {
         console.log(error)
         startSignalRConnection(connection)
     })
     await startSignalRConnection(connection)
     return connection
-}            
+}    
 
 
-export default setupSignalRConnection
+/**
+ * Функция для подключения к отчетам в сигнале
+ * @param key Секрет-ключ для подключения
+ * @returns Подключение к сигналу
+ */
+const setupSignalRReportsConnection = async (key: string | null) => {
+    const connection = new HubConnectionBuilder()
+            .withUrl("https://maxim.pamagiti.site/hubs/report?key=" + key,
+                    { withCredentials: false })
+            .withAutomaticReconnect()
+            .build()
+
+    // Если подключение срывается, мы пытаемся заново подключиться
+    connection.onclose(error => {
+        console.log(error)
+        startSignalRConnection(connection)
+    })
+    await startSignalRConnection(connection)
+    return connection
+} 
+
+
+export {
+    setupSignalRGradesConnection,
+    setupSignalRReportsConnection
+}

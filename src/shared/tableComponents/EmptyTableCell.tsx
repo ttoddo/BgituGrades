@@ -19,6 +19,7 @@ export default function EmptyTableCell({cellType, className = "", changePresence
     const selectDataMarks = ["2", "3", "4", "5", "+"]
     const selectDataVisit = ["Н", "У", "П"]
 
+    // Проверка, работа или дата
     switch (cellType) {
         case "date":
             return (

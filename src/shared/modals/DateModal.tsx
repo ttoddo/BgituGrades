@@ -3,7 +3,7 @@ import ModalInput from './ModalInput';
 import Cross from '../components/SVG/Cross';
 
 interface PropsInterface{
-    isOpen: boolean;
+    isOpen: boolean; 
     close: () => void;
     isEditMode: boolean;
 }    

@@ -6,7 +6,10 @@ import { getGroups, getDisciplines, getDisciplinesByGroup } from "../shared/util
 import { useSearchParams } from "react-router-dom"
 import type { DisciplineInterface, GroupInterface, DateTableSample } from "../shared/types/fromRequests"
 import type { HubConnection } from "@microsoft/signalr"
-import setupSignalRConnection from "../shared/utils/signalRService"
+import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
+import LeftNavBarSkeleton from "../shared/components/skeletons/LeftNavBarSkeleton"
+import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
+import { setupSignalRGradesConnection } from "../shared/utils/signalRService"
 
 function VisitActivity() {
     const [searchParams] = useSearchParams()
@@ -21,8 +24,9 @@ function VisitActivity() {
     const [connection, setConnection] = useState<null | HubConnection>(null)
 
     useEffect(() => {
+        // Подключаем сигнал
         const establishConnection = async () => {
-                const con = await setupSignalRConnection(localStorage.getItem("api_key"))
+                const con = await setupSignalRGradesConnection(localStorage.getItem("api_key"))
                 console.log(con.state)
                 setConnection(con)
             }
@@ -40,6 +44,7 @@ function VisitActivity() {
             }
         }
 
+        // Все группы и дисциалины для полей ввода
         const getGroupsAndDisciplines = async () => {
             const respGroups: GroupInterface[] | undefined = await getGroups()
             const respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
@@ -52,6 +57,7 @@ function VisitActivity() {
             setIsLoading(false)
         }
 
+        // Проверка, есть ли в query параметрах и дисциплина и группа
         if (tableIds.length > 1) {
             reloadDisciplines()   
             connection?.invoke("GetPresenceGrade", {
@@ -64,12 +70,17 @@ function VisitActivity() {
         } else {
             getGroupsAndDisciplines()
         }
+
+        // Проверка, есть ли ключ в query параметрах
         const key = searchParams.get("key")
         if (key) {
             localStorage.setItem("api_key", key)
         }     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tableIds])
 
+
+    // Поиск таблицы, если оба query параметра заполены
     const handleSearch = () => {
         const groupid = searchParams.get("groupid")
         const disciplineid = searchParams.get("disciplineid")
@@ -81,6 +92,7 @@ function VisitActivity() {
         }
     }
 
+    // Делаем слушатели событий из сигнала, если подключение активно
     if (connection) {
         connection.on("ReceivePresences", (data) => {
             console.log(data)
@@ -90,34 +102,63 @@ function VisitActivity() {
     }
 
 
-    if (isLoading || connection == null) {
-        return (<div>Всё плохо</div>)
-    }
     if (isTableReady && connection) {
         return (
-        <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
-            <div className="w-[90%] flex flex-col gap-6.25">
-                <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
-                <div className="flex gap-6.25">
-                    <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
-                    <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection}/>
-                </div>
-            </div>
+        <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+            {
+                // Пришлось сделать так, чтобы не было блика при смене роута
+                isLoading ? 
+                <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
+                    <TopNavBarSkeleton />
+                    <div className="flex gap-6.25">
+                        <LeftNavBarSkeleton />
+                        <TableGeneratorSkeleton/>
+                    </div>
+                </div> :
+
+                <div className="w-[90%] flex flex-col gap-6.25">
+                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
+                    <div className="flex gap-6.25">
+                        <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
+                        <DateTableGenerator table={table} isEditMode={isEditMode} tableType="date" connection={connection}/>
+                    </div>
+                </div> 
+            }
         </div>
         )
     }
     if (connection) {
     return (
-        <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
-            <div className="w-[90%] flex flex-col gap-6.25">
-                <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
-                <div className="flex gap-6.25">
-                    <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
-                    <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection}/>
+        <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+            {
+                isLoading ? 
+                <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
+                    <TopNavBarSkeleton />
+                    <div className="flex gap-6.25">
+                        <LeftNavBarSkeleton />
+                        <TableGeneratorSkeleton/>
+                    </div>
+                </div> :
+                <div className="w-[90%] flex flex-col gap-6.25">
+                    <TopNavBar handleSearch={handleSearch} disciplines={disciplines} groups={groups} tableIds={tableIds}/>
+                    <div className="flex gap-6.25">
+                        <LeftNavBar visitsStatus={true} tasksStatus={false} reportStatus={false} adminStatus={false}/>
+                        <DateTableGenerator isEditMode={isEditMode} tableType="date" connection={connection}/>
+                    </div>
                 </div>
-            </div>
+            }
         </div> 
     )}
+    return (
+            <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none flex justify-center ">
+                <div className="w-[90%] animate-pulse flex flex-col gap-6.25">
+                    <TopNavBarSkeleton />
+                    <div className="flex gap-6.25">
+                        <LeftNavBarSkeleton />
+                        <TableGeneratorSkeleton/>
+                    </div>
+                </div>
+            </div>)
 }
 
 export default VisitActivity
