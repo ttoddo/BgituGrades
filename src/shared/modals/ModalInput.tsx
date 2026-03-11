@@ -1,19 +1,22 @@
 import { Field, Input, Label } from "@headlessui/react";
-import { type ReactNode } from "react";
+import { type ChangeEvent, type ReactNode } from "react";
 
 interface PropsInterface {
     placeholder?: string;
     children: ReactNode;
-
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    value: string;
 
 }
 
-export default function ModalInput({placeholder, children}: PropsInterface) {
+export default function ModalInput({placeholder, children, onChange, value}: PropsInterface) {
+
+
 
     return (
         <Field className="flex flex-col gap-1 text-tLight dark:text-tLightD">
             <Label>{children}</Label>
-            <Input placeholder={placeholder} className="bg-bgLight dark:bg-bgLightD rounded-sm h-10 data-focus:outline-bgLightD data-focus:outline-2"/>
+            <Input placeholder={placeholder} onChange={onChange} value={value} className="bg-bgLight dark:bg-bgLightD rounded-sm h-10 data-focus:outline-bgLightD data-focus:outline-2"/>
         </Field>
     )
 }

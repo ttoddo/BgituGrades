@@ -72,3 +72,16 @@ export const getStudentLink = async (groupId:number, disciplineId: number) => {
         console.log(error)
     }
 }
+
+
+export const addNewStudent = async (groupId:number, studentName: string) => {
+    try {
+        await instance.post('/api/student', {
+            'name': studentName,
+            'groupId': groupId 
+        })
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+}
