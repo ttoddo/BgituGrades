@@ -44,6 +44,8 @@ export default function TaskActivity() {
             const res: DisciplineInterface[] | undefined = await getDisciplinesByGroup(tableIds[0])
             if(res) {
                 setDisciplines(res)
+                console.log(res)
+                console.log(disciplines)
             }
         }
 
@@ -67,10 +69,9 @@ export default function TaskActivity() {
                 disciplineId: tableIds[1],
                 groupId: tableIds[0]
             })
-        } else if (tableIds.length == 1){
-            console.log(tableIds)
+        } else if (tableIds.length > 0){
             reloadDisciplines()
-        } else if (tableIds.length == 0) {
+        } else{
             getGroupsAndDisciplines()
 
         }
@@ -81,8 +82,8 @@ export default function TaskActivity() {
             localStorage.setItem("api_key", key)
         }
 
-        getGroupsAndDisciplines()
-    }, [connection, searchParams, tableIds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tableIds])
 
 
 

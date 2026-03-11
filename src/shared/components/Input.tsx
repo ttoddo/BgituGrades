@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import Arrow from "./SVG/Arrow"
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, ComboboxButton } from '@headlessui/react'
 import { useSearchParams } from "react-router-dom";
-import type { DisciplineInterface, GroupInterface } from "../types/fromRequests";
+import type { DisciplineInterface, GroupInterface, ReportTypeInterface, StudentInterface } from "../types/fromRequests";
 
 interface PropsInterface{
     textChildren?: string;
     helpText?: string;
-    array: GroupInterface[] | DisciplineInterface[];
+    array: GroupInterface[] | DisciplineInterface[] | StudentInterface[] ;
     inputType: "group" | "discipline" | "student" | "type" | "startDate" | "endDate"
     onChange?: () => void;
     handleSearch: () => void;
@@ -17,7 +17,7 @@ interface PropsInterface{
 
 
 export default function Input({textChildren="Группа", helpText="Название группы", array, inputType, handleSearch}: PropsInterface){
-    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | null>(null)
+    const [selectedValue, setSelectedValue] = useState<GroupInterface | DisciplineInterface | StudentInterface | string | null>(null)
     const [query, setQuery] = useState(``)
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -25,14 +25,20 @@ export default function Input({textChildren="Группа", helpText="Назва
         // Поиск query параметров
         const disciplineId = searchParams.get("disciplineid")
         const groupId = searchParams.get("groupid")
+        const studentId = searchParams.get("studentid")
+        const reportType = searchParams.get("reporttype")
 
         // Установка выбранного параметра после перезапуска страницы
-        let elementToSet: GroupInterface | DisciplineInterface | null = null;
-        array.forEach(element => {
-            if ((element.id == Number(groupId) && inputType == "group") || (element.id == Number(disciplineId) && inputType == "discipline")) {
-                elementToSet = element
-            }
-        });
+        let elementToSet: GroupInterface | DisciplineInterface | StudentInterface  | string | null = null;
+        if(inputType == "type" && reportType){
+            elementToSet = reportType
+        } else {
+            array.forEach(element => {
+                if ((element.id == Number(groupId) && inputType == "group") || (element.id == Number(disciplineId) && inputType == "discipline") || (element.id == Number(studentId) && inputType == "student")) {
+                    elementToSet = element
+                }
+            });
+        }
         setSelectedValue(elementToSet)
 
         // Callback на проверку, есть ли оба элемента в query и вывод таблицы
@@ -43,31 +49,48 @@ export default function Input({textChildren="Группа", helpText="Назва
     const handleClick = () => {
        return filterValues
     }
-    
+    // Починить хуйню
     // Изменение выбранного элемента и добавление идентификатора в query параметры
-    const handleChange = (e: GroupInterface | DisciplineInterface | null) => {
+    const handleChange = (e: GroupInterface | DisciplineInterface | StudentInterface | null) => {
         setSelectedValue(e)
-        if (e){
-            if (inputType == "group") {
-                const params = new URLSearchParams()
-                const disciplineId = searchParams.get("disciplineid")
-                params.append("groupid", String(e.id))
-                if (disciplineId) {
-                    params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
-                }
-                setSearchParams(params)
-            } else if (inputType == "discipline") {
-                const params = new URLSearchParams()
-                const groupId = searchParams.get("groupid")
-                params.append("disciplineid", String(e.id))
-                if (groupId) {
-                    params.append("groupid", groupId ? groupId : String(e.id))
-                }
-                setSearchParams(params)
-            } else if (inputType == "student") {
-                console.log("studenteki")
 
+        if (e){
+            const params = new URLSearchParams()
+            const groupId = searchParams.get("groupid")
+            const disciplineId = searchParams.get("disciplineid")
+            const studentId = searchParams.get("studentid")
+            const reportType = searchParams.get("reporttype")
+            switch(inputType){
+                case "group" : {
+                    params.append("groupid", String(e.id))
+                    break
+                }
+                case "discipline" : {
+                    params.append("disciplineid", String(e.id))
+                    break
+                }
+                case "student" : {
+                    params.append("studentid", String(e.id))
+                    break
+                }
+                case "type" : {
+                    params.append("reporttype", String(e.id))
+                    break
+                }
             }
+            if(groupId) {
+                params.append("groupid", groupId ? groupId : String(e.id))
+            }
+            if (disciplineId) {
+                params.append("disciplineid", disciplineId ? disciplineId : String(e.id))
+            }           
+            if (studentId) {
+                params.append("studentid", studentId ? studentId : String(e.id))
+            }
+            if(reportType){
+                params.append("reporttype", reportType ? reportType : String(e.id))
+            }
+           
         }
     }
 

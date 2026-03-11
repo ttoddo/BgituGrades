@@ -26,6 +26,24 @@ export interface DisciplineInterface {
 }
 
 /**
+ * Интерфейс со студентами
+ */
+
+export interface StudentInterface {
+    id: number;
+    name: string;
+    groupId: number;
+}
+
+
+
+export interface ReportTypeInterface {
+    id: 0 | 1
+    type: "ByPresence" | "ByProgress";
+}
+
+
+/**
  * Интерфейс доступных типов посещения
  */
 export interface PresenceInterface {
@@ -43,6 +61,7 @@ export interface WorkInterface {
     name: string;
     value: null | string
 }
+
  
 /**
  * Интерфейс таблицы посещений
