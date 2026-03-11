@@ -38,8 +38,8 @@ export interface StudentInterface {
 
 
 export interface ReportTypeInterface {
-    id: 0 | 1
-    type: "ByPresence" | "ByProgress";
+    id: number
+    name: "По посещению" | "По успеваемости";
 }
 
 
