@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import { useEffect, useState } from "react"
-import type {  DisciplineInterface, GroupInterface } from "../shared/types/fromRequests"
-import { getDisciplines, getDisciplinesByGroup, getGroups } from "../shared/utils/apiRequests"
+import type {  DisciplineInterface, GroupInterface, StudentInterface } from "../shared/types/fromRequests"
+import { getDisciplines, getDisciplinesByGroup, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
 import TopNavBarSkeleton from "../shared/components/skeletons/TopNavBarSkeleton"
@@ -18,7 +18,9 @@ export default function ReportActivity() {
     const [tableIds, setTableIds] = useState<number[]>([])
     const [groups, setGroups] = useState<GroupInterface[]>([])
     const [disciplines, setDisciplines] = useState<DisciplineInterface[]>([])
+    const [students, setStudents] = useState<StudentInterface[]>([])
     const [connection, setConnection] = useState<null | HubConnection>(null)
+
     //const [table, setTable] = useState<WorkTableSample>()
     //const [isTableReady, setIsTableReady] = useState(false)
 
@@ -46,31 +48,50 @@ export default function ReportActivity() {
             }
         }
 
+        const reloadStudents= async () => {
+            const res: StudentInterface[] | undefined = await getStudents(tableIds[0])
+            if(res) {
+                setStudents(res)
+            }
+        }
+
+
         // Все группы и дисциалины для полей ввода
-        const getGroupsAndDisciplines = async () => {
+        const getParams = async () => {
             const respGroups: GroupInterface[] | undefined = await getGroups()
             const respDisciplines: DisciplineInterface[] | undefined = await getDisciplines()
+            
+            let respStudents: StudentInterface[] | undefined 
+
+            const groupId = searchParams.get("groupid")
+            console.log(groupId)
+            if(groupId != undefined){
+                respStudents = await getStudents(Number(groupId))
+            }
+
             if(respGroups){
                 setGroups(respGroups)
             }
             if(respDisciplines) {
                 setDisciplines(respDisciplines)
             }
+            if(respStudents){
+                setStudents(respStudents)
+            }
             setIsLoading(false)
         }
 
-        // Проверка, есть ли в query параметрах и дисциплина и группа
-        if(tableIds.length > 1){
+        // Проверка, есть ли в query параметрах и дисциплина и группа и студент
+        if (tableIds.length > 2) {
+            reloadStudents()
             reloadDisciplines()
-            connection?.invoke("GetMarkGrade", {
-                disciplineId: tableIds[1],
-                groupId: tableIds[0]
-            })
-        } else if (tableIds.length == 1){
-            console.log(tableIds)
+        } else if(tableIds.length > 1){
+            reloadDisciplines()
+            reloadStudents()
+        } else if (tableIds.length > 0){
             reloadDisciplines()
         } else if (tableIds.length == 0) {
-            getGroupsAndDisciplines()
+            getParams()
 
         }
 
@@ -80,20 +101,22 @@ export default function ReportActivity() {
             localStorage.setItem("api_key", key)
         }
 
-        getGroupsAndDisciplines()
     }, [connection, searchParams, tableIds])
 
 
 
 
-    // Поиск таблицы, если оба query параметра заполены
+    // Поиск таблицы, если все query параметра заполены
     const handleSearch = () => {
         const groupid = searchParams.get("groupid")
         const disciplineid = searchParams.get("disciplineid")
+        const studentid = searchParams.get("studentid")
 
-        if((groupid != 'null' && disciplineid != 'null') && disciplineid && groupid){
-            setTableIds([Number(groupid), Number(disciplineid)])
-        } else if (groupid && groupid != 'null'){
+        if((groupid != 'null' && disciplineid != 'null' && studentid != 'null') && disciplineid && groupid && studentid){
+            setTableIds([Number(groupid), Number(disciplineid), Number(studentid)])
+        } else  if((groupid != 'null' && disciplineid != 'null' ) && disciplineid && groupid){
+            setTableIds([Number(groupid), Number(disciplineid), Number(studentid)])
+        }  else if (groupid && groupid != 'null'){
             setTableIds([Number(groupid)])
         }
 
@@ -122,7 +145,7 @@ export default function ReportActivity() {
                         </div>
                     </div> :
                     <div className="w-[90%] flex flex-col gap-6.25">
-                        <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines}/>
+                        <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
                             <ReportGenerator />
