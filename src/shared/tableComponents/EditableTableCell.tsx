@@ -26,19 +26,14 @@ export default function EditableTableCell({isEditMode = false, className = "valu
                     <p>{cellData}</p>
                 </td>)
         case "work":
-            if(isEditMode) {
-                return (
-                    <td className={className} onClick={onClick}>
-                        <Button />
-                    </td>) 
-            } else {
-                return (
-                    <td className={className} onClick={onClick}>
-
-                    </td>
-                )
-
-            }
+            return (
+                isEditMode ?
+                <td className={className} onClick={onClick}>
+                    <Button></Button>
+                </td> : 
+                <td className={className} onClick={onClick}>
+                    <p>{cellData}</p>
+                </td>) 
         case "date":
             return  (
                 isEditMode ? 

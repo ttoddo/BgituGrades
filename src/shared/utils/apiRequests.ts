@@ -90,13 +90,34 @@ export const getStudents = async (groupId: number) => {
  * Добавление студента в группу
  * @param groupId Идентификатор группы
  * @param studentName Имя студента
- * @returns -
+ * @returns true, если получилось
  */
 export const addNewStudent = async (groupId:number, studentName: string) => {
     try {
         await instance.post('/api/student', {
             'name': studentName,
             'groupId': groupId 
+        })
+        return true
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+/**
+ * Добавление новой работы
+ * @param name Название работы
+ * @param issuedDate Дата выдачи
+ * @param description Описание
+ * @param link Ссылка
+ * @param disciplineId Идентификатор дисциплины
+ * @param groupId Идентификатор группы
+ * @returns true, если получилось
+ */
+export const addWork = async (name: string, issuedDate: string, description: string, link = "maxim.pamagiti.site", disciplineId: number, groupId: number) => {
+    try {
+        await instance.post('/api/work', {
+            name, issuedDate, description, link, disciplineId, groupId
         })
         return true
     } catch (error) {

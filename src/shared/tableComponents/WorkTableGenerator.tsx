@@ -66,12 +66,12 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
         const rows = [];
         let cells = [];
 
-        
+        // ОБЯЗАТЕЛЬНО СДЕЛАТЬ НОВУЮ МОДАЛКУ ДЛЯ ОЦЕНКИ СТУДЕНТУ
         if(table && table.length > 0){
             // Угловая ячейка
             const works = table[0].marks
             cells.push(<FirstTableCell topTitle="Работы" botTitle="ФИО" className="min-w-56.25 h-12.5" key={"Allah"} />)
-            
+            console.log(works)
             // Первая строка
             works.forEach((work: WorkInterface, workIndex: number) => {
                 cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData={work.name} className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allah" + String(workIndex)} />)
@@ -80,6 +80,10 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                     cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData="" className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allahi" + String(workIndex)} />)
                 }
             })
+            // Заглушка, елси работ еще не добавлено
+            if (works.length == 0) {
+                cells.push(<EditableTableCell onClick={openWorkModal} cellType="work" cellData="" className="min-w-12.5 h-12.5 text-[16px] font-blod text-tLight dark:text-tLightD text-center " key={"Allahi" + "0"} />)
+            }
             rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"allah2"}>{cells}</tr>)
             
             // Остальные строки
@@ -96,6 +100,10 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                         cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                     }
                 })
+                // Заглушка, елси работ еще не добавлено
+                if (works.length == 0) {
+                    cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+                }
                 rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={idx}>{cells}</tr>)
 
             })
@@ -111,6 +119,10 @@ export default function WorkTableGenerator({tableType, isEditMode, table, connec
                         cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
                     }
             });
+            // Заглушка, елси работ еще не добавлено
+            if (works.length == 0) {
+                cells.push(<EmptyTableCell disabled={true} cellType={tableType} className="min-w-12.5 h-12.5 " key={"Allah left"} />)
+            }
             rows.push(<tr className="odd:bg-bgLight dark:odd:bg-bgLightD even:bg-bgMiddle dark:even:bg-bgMiddleD" key={"alloe"}>{cells}</tr>)
         }
     return (
