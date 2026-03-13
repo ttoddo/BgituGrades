@@ -24,8 +24,8 @@ export default function DateModal({isOpen, close, isEditMode}: PropsInterface) {
             <DialogTitle as="h3" className="text-base/7 font-medium text-tLight dark:text-tLightD mb-5">
             {isEditMode ? "Редактирование" : "Добавление"} даты
             </DialogTitle>
-            <ModalInput>Дата</ModalInput>
-            <ModalInput>Тип занятия</ModalInput>
+            <ModalInput type='date' onChange={() => {}} value="TODO">Дата</ModalInput>
+            <ModalInput onChange={() => {}} value="TODO">Тип занятия</ModalInput>
             <div className="mt-4 flex gap-7.5">
                 <Button
                     className="inline-flex items-center gap-2 rounded-md bg-primary dark:bg-primaryD px-3 py-1.5 text-sm/6 font-semibold text-tDark shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-600 data-open:bg-gray-700"

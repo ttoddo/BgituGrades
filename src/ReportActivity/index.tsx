@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom"
 import LeftNavBar from "../shared/components/LeftNavBar"
 import { useEffect, useState } from "react"
-import type {  DisciplineInterface, GroupInterface, StudentInterface } from "../shared/types/fromRequests"
+import type {  DisciplineInterface, GroupInterface, StudentInterface, WorkTableSample } from "../shared/types/fromRequests"
 import { getDisciplines, getDisciplinesByGroup, getGroups, getStudents } from "../shared/utils/apiRequests"
 import { HubConnection } from "@microsoft/signalr"
 import TableGeneratorSkeleton from "../shared/components/skeletons/TableGeneratorSkeleton"
@@ -22,9 +22,9 @@ export default function ReportActivity() {
     const [connection, setConnection] = useState<null | HubConnection>(null)
     const [reportProgress, setReportProgress] = useState<number | null>(null)
     const [reportDescription, setReportDescription] = useState<string | null>(null)
-    const [table, setTable] = useState<WorkTableSample>()
+    const [/*table*/, setTable] = useState<WorkTableSample>()
     const [isTableReady, setIsTableReady] = useState(false)
-    const [link, setLink] = useState<string | null>(null)
+    const [/*link*/, setLink] = useState<string | null>(null)
 
 
 
@@ -102,9 +102,6 @@ export default function ReportActivity() {
                 disciplineid: [tableIds[1]],
                 groupid: [tableIds[0]]
             })
-            if(link == null) {
-                setIsLoading(true)
-            }
         }
         else if (tableIds.length > 2) {
             console.log(tableIds)
@@ -149,12 +146,10 @@ export default function ReportActivity() {
         }
 
     }
-
-    
-
-
         if (connection) {
-            console.log("zapros na gotovnost")
+            // if (link == null && tableIds.length > 3) {
+            //     setIsLoading(true)
+            // }
             connection.on("ReportReady", (data, link) => {
                 setTable(data)
                 console.log(data)
@@ -170,7 +165,6 @@ export default function ReportActivity() {
         }
 
         if (connection) {
-            console.log("zapros na staatus")
             connection.on("ReportProgress", (data, pisun, yaitsa) => {
                 console.log(data, pisun, yaitsa)
                 setReportProgress(pisun)
@@ -181,13 +175,42 @@ export default function ReportActivity() {
 
 
 
-        if(isTableReady && connection) {
+    if(isTableReady && connection) {
         return (
             <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
                 {
-                    // Пришлось сделать так, чтобы не было блика при смене роута
-                    isLoading ? 
+                // Пришлось сделать так, чтобы не было блика при смене роута
+                isLoading ? 
+                <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+                    <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
+                        <TopNavBarSkeleton />
+                        <div className="flex gap-6.25">
+                            <LeftNavBarSkeleton />
+                            <TableGeneratorSkeleton/>
+                        </div>
+                        
+                    </div>
+                </div> :
+                <div className="w-[90%] flex flex-col gap-6.25">
+                    <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
+                    <div className="flex gap-6.25">
+                        <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
+                        <ReportGenerator />
+                    </div>
+                </div>
+                }   
+            </div>
+        )
+    }
+
+    if(connection) {
+        return (
+            <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
+                {
+                // Пришлось сделать так, чтобы не было блика при смене роута
+                isLoading ? 
                     <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
+                        <Loading progress={reportProgress} description={reportDescription} />
                         <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
                             <TopNavBarSkeleton />
                             <div className="flex gap-6.25">
@@ -201,59 +224,8 @@ export default function ReportActivity() {
                         <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
                         <div className="flex gap-6.25">
                             <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
-                            <ReportGenerator />
                         </div>
                     </div>
-                }   
-            </div>
-        )
-    }
-
-    if(connection) {
-        return (
-            <div className="w-full h-[90vh] bg-bgDark dark:bg-bgDarkD scroll-none bg- flex justify-center ">
-                {
-
-                    // Пришлось сделать так, чтобы не было блика при смене роута
-                    isTableReady ?
-                        isLoading ? 
-                            <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-                                <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
-                                    <TopNavBarSkeleton />
-                                    <div className="flex gap-6.25">
-                                        <LeftNavBarSkeleton />
-                                        <TableGeneratorSkeleton/>
-                                    </div>
-                                    
-                                </div>
-                            </div> :
-                            <div className="w-[90%] flex flex-col gap-6.25">
-                                <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
-                                <div className="flex gap-6.25">
-                                    <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
-                                </div>
-                            </div>
-                            :
-                            isLoading ? 
-                                <div className="w-full h-[90vh]  duration-75 bg-bgDark dark:bg-bgDarkD scroll-none  flex justify-center items-center">
-                                    <Loading progress={reportProgress} description={reportDescription} />
-                                    <div className="w-[90%]  flex blur-md bg-bgLight dark:bg-bgModalD flex-col gap-6.25">
-                                        <TopNavBarSkeleton />
-                                        <div className="flex gap-6.25">
-                                            <LeftNavBarSkeleton />
-                                            <TableGeneratorSkeleton/>
-                                        </div>
-                                        
-                                    </div>
-                                </div> :
-                                <div className="w-[90%] flex flex-col gap-6.25">
-                                    <StudentTopNavBar handleSearch={handleSearch} groups={groups} disciplines={disciplines} students={students}/>
-                                    <div className="flex gap-6.25">
-                                        <LeftNavBar visitsStatus={false} tasksStatus={false} reportStatus={true} adminStatus={false}/>
-                                    </div>
-                                </div>
-                    
-                   
                 }   
             </div>
         )
@@ -269,7 +241,8 @@ export default function ReportActivity() {
                 </div>
                 
             </div>
-        </div>)
+        </div>
+        )
 }
 
 
