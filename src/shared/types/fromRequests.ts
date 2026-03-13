@@ -84,3 +84,4 @@ export type WorkTableSample = [
         marks: WorkInterface[] 
     }
 ]
+
